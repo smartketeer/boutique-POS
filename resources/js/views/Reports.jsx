@@ -159,26 +159,26 @@ const Reports = () => {
     };
 
     if (!isAdmin) {
-        return <div className="text-red-500 font-bold p-8 bg-[#dddddd] rounded-xl border border-red-100">Access Denied: Admin privileges required.</div>;
+        return <div className="text-red-500 font-medium p-8 bg-[#dddddd] rounded-xl border border-red-100">Access Denied: Admin privileges required.</div>;
     }
 
     return (
         <div className="space-y-8 max-w-7xl mx-auto pb-12">
             <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div className="space-y-1">
-                    <h1 className="text-3xl font-black text-[#818181] tracking-tight">Admin Management Suite</h1>
+                    <h1 className="text-3xl font-semibold text-[#818181] tracking-tight">Admin Management Suite</h1>
                     <p className="text-[#a6a6a6] font-medium">Comprehensive business analytics and staff performance metrics.</p>
                 </div>
                 <div className="flex gap-3">
                     <button
                         onClick={handlePrint}
-                        className="flex items-center gap-2 px-5 py-2.5 bg-white border border-[#cbcbcb] text-[#818181] rounded-xl hover:bg-[#dddddd] transition-all font-bold text-sm shadow-sm"
+                        className="flex items-center gap-2 px-5 py-2.5 bg-white border border-[#cbcbcb] text-[#818181] rounded-xl hover:bg-[#dddddd] transition-all font-medium text-sm shadow-sm"
                     >
                         <Printer size={18} /> Print Report
                     </button>
                     <button
                         onClick={handleExportCsv}
-                        className="flex items-center gap-2 px-5 py-2.5 bg-[#818181] text-white rounded-xl hover:bg-[#3f3f46] transition-colors font-bold text-sm shadow-sm"
+                        className="flex items-center gap-2 px-5 py-2.5 bg-[#818181] text-white rounded-xl hover:bg-[#3f3f46] transition-colors font-medium text-sm shadow-sm"
                     >
                         <Download size={18} /> Export CSV
                     </button>
@@ -193,10 +193,10 @@ const Reports = () => {
                 <div className="bg-white border border-[#cbcbcb] p-6 rounded-2xl shadow-sm">
                     <div className="flex items-center justify-between mb-4">
                         <span className="p-2 bg-[#dddddd] text-green-600 rounded-lg"><TrendingUp size={20} /></span>
-                        <span className="flex items-center gap-1 text-green-600 text-xs font-black uppercase tracking-tighter"><ArrowUpRight size={14} /> +12.5%</span>
+                        <span className="flex items-center gap-1 text-green-600 text-xs font-semibold uppercase tracking-tighter"><ArrowUpRight size={14} /> +12.5%</span>
                     </div>
-                    <h3 className="text-sm font-black text-[#a6a6a6] uppercase tracking-widest">Today's Revenue</h3>
-                    <p className={`text-3xl font-black mt-1 tracking-tighter ${summaryLoading && !dailySummary ? 'text-[#a6a6a6] animate-pulse' : 'text-[#818181]'}`}>
+                    <h3 className="text-sm font-semibold text-[#a6a6a6] uppercase tracking-widest">Today's Revenue</h3>
+                    <p className={`text-3xl font-semibold mt-1 tracking-tighter ${summaryLoading && !dailySummary ? 'text-[#a6a6a6] animate-pulse' : 'text-[#818181]'}`}>
                         {PESO}{summaryLoading && !dailySummary ? EM_DASH : formatPeso(dailySummary?.total_revenue)}
                     </p>
                 </div>
@@ -204,10 +204,10 @@ const Reports = () => {
                 <div className="bg-white border border-[#cbcbcb] p-6 rounded-2xl shadow-sm">
                     <div className="flex items-center justify-between mb-4">
                         <span className="p-2 bg-[#dddddd] text-blue-600 rounded-lg"><Users size={20} /></span>
-                        <span className="flex items-center gap-1 text-red-400 text-xs font-black uppercase tracking-tighter"><ArrowDownRight size={14} /> -2.4%</span>
+                        <span className="flex items-center gap-1 text-red-400 text-xs font-semibold uppercase tracking-tighter"><ArrowDownRight size={14} /> -2.4%</span>
                     </div>
-                    <h3 className="text-sm font-black text-[#a6a6a6] uppercase tracking-widest">Total Transactions</h3>
-                    <p className={`text-3xl font-black mt-1 tracking-tighter ${summaryLoading && !dailySummary ? 'text-[#a6a6a6] animate-pulse' : 'text-[#818181]'}`}>
+                    <h3 className="text-sm font-semibold text-[#a6a6a6] uppercase tracking-widest">Total Transactions</h3>
+                    <p className={`text-3xl font-semibold mt-1 tracking-tighter ${summaryLoading && !dailySummary ? 'text-[#a6a6a6] animate-pulse' : 'text-[#818181]'}`}>
                         {summaryLoading && !dailySummary ? EM_DASH : toNumber(dailySummary?.total_transactions).toLocaleString()}
                     </p>
                 </div>
@@ -216,8 +216,8 @@ const Reports = () => {
                     <div className="flex items-center justify-between mb-4">
                         <span className="p-2 bg-[#dddddd] text-purple-600 rounded-lg"><Package size={20} /></span>
                     </div>
-                    <h3 className="text-sm font-black text-[#a6a6a6] uppercase tracking-widest">Inventory Valuation</h3>
-                    <p className={`text-3xl font-black mt-1 tracking-tighter ${valuationLoading && !inventoryValuation ? 'text-[#a6a6a6] animate-pulse' : 'text-[#818181]'}`}>
+                    <h3 className="text-sm font-semibold text-[#a6a6a6] uppercase tracking-widest">Inventory Valuation</h3>
+                    <p className={`text-3xl font-semibold mt-1 tracking-tighter ${valuationLoading && !inventoryValuation ? 'text-[#a6a6a6] animate-pulse' : 'text-[#818181]'}`}>
                         {PESO}{valuationLoading && !inventoryValuation ? EM_DASH : formatPeso(inventoryValuation?.total_valuation)}
                     </p>
                 </div>
@@ -229,12 +229,12 @@ const Reports = () => {
                     <header className="p-6 border-b border-[#19140015] flex items-center justify-between bg-white/70 backdrop-blur">
                         <div className="flex items-center gap-2">
                             <Users size={18} className="text-[#818181]" />
-                            <h2 className="text-sm font-black text-[#818181] uppercase tracking-widest">Top Performing Staff</h2>
+                            <h2 className="text-sm font-semibold text-[#818181] uppercase tracking-widest">Top Performing Staff</h2>
                         </div>
                         <button
                             type="button"
                             onClick={toggleStaffRange}
-                            className="text-xs font-black text-[#a6a6a6] hover:text-[#818181] transition-all uppercase tracking-widest flex items-center gap-1 underline underline-offset-4 decoration-[#19140015]"
+                            className="text-xs font-semibold text-[#a6a6a6] hover:text-[#818181] transition-all uppercase tracking-widest flex items-center gap-1 underline underline-offset-4 decoration-[#19140015]"
                         >
                             {staffRangeLabel} <Filter size={12} />
                         </button>
@@ -248,13 +248,13 @@ const Reports = () => {
                             <div className="space-y-6">
                                 {staffPerformance.map((staff, i) => (
                                     <div key={staff.id} className="flex items-center gap-4 group">
-                                        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#4a2437] font-black text-xs border border-[#19140015] group-hover:bg-gradient-to-r group-hover:from-[#4a2437] group-hover:to-[#d94a79] group-hover:text-white transition-all shadow-sm">#{i + 1}</div>
+                                        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-[#4a2437] font-semibold text-xs border border-[#19140015] group-hover:bg-gradient-to-r group-hover:from-[#4a2437] group-hover:to-[#d94a79] group-hover:text-white transition-all shadow-sm">#{i + 1}</div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-sm font-black text-[#818181] truncate">{staff.name}</p>
+                                            <p className="text-sm font-semibold text-[#818181] truncate">{staff.name}</p>
                                             <p className="text-xs text-[#a6a6a6] font-medium italic">{staff.sales_count} sales processed</p>
                                         </div>
                                         <div className="text-right">
-                                            <p className="text-sm font-black text-[#818181]">{PESO}{formatPeso(staff.sales_sum_total_amount)}</p>
+                                            <p className="text-sm font-semibold text-[#818181]">{PESO}{formatPeso(staff.sales_sum_total_amount)}</p>
                                             <div className="w-24 h-1.5 bg-[#dddddd] rounded-full mt-2 overflow-hidden border border-[#1914000d]">
                                                 <div
                                                     className="h-full bg-gradient-to-r from-[#4a2437] to-[#d94a79] rounded-full transition-all duration-1000"
@@ -274,13 +274,13 @@ const Reports = () => {
                     <header className="p-6 border-b border-[#19140015] flex items-center justify-between bg-white/70 backdrop-blur">
                         <div className="flex items-center gap-2">
                             <BarChart size={18} className="text-[#818181]" />
-                            <h2 className="text-sm font-black text-[#818181] uppercase tracking-widest">{revenueRangeLabel} Revenue Trend</h2>
+                            <h2 className="text-sm font-semibold text-[#818181] uppercase tracking-widest">{revenueRangeLabel} Revenue Trend</h2>
                         </div>
                         <div className="flex items-center gap-1 p-1 bg-white border border-[#19140015] rounded-2xl shadow-sm">
                             <button
                                 type="button"
                                 onClick={() => setRevenueRange('week')}
-                                className={`h-8 px-3 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all ${
+                                className={`h-8 px-3 rounded-xl text-[11px] font-semibold uppercase tracking-widest transition-all ${
                                     revenueRange === 'week' ? 'bg-[#818181] text-white' : 'text-[#a6a6a6] hover:text-[#818181] hover:bg-[#fff7f9]'
                                 }`}
                             >
@@ -289,7 +289,7 @@ const Reports = () => {
                             <button
                                 type="button"
                                 onClick={() => setRevenueRange('month')}
-                                className={`h-8 px-3 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all ${
+                                className={`h-8 px-3 rounded-xl text-[11px] font-semibold uppercase tracking-widest transition-all ${
                                     revenueRange === 'month' ? 'bg-[#818181] text-white' : 'text-[#a6a6a6] hover:text-[#818181] hover:bg-[#fff7f9]'
                                 }`}
                             >
@@ -358,8 +358,8 @@ const Reports = () => {
                                                 }}
                                             >
                                                 <div className="rounded-2xl border border-[#19140015] bg-white shadow-xl px-3 py-2">
-                                                    <div className="text-[10px] font-black text-[#a6a6a6] uppercase tracking-widest">{hoveredLabel}</div>
-                                                    <div className="text-[13px] font-black text-[#818181]">{PESO}{formatPeso(hovered.val)}</div>
+                                                    <div className="text-[10px] font-semibold text-[#a6a6a6] uppercase tracking-widest">{hoveredLabel}</div>
+                                                    <div className="text-[13px] font-semibold text-[#818181]">{PESO}{formatPeso(hovered.val)}</div>
                                                 </div>
                                             </div>
                                         ) : null}

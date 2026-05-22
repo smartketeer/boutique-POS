@@ -697,8 +697,8 @@ const Inventory = () => {
                 <div className="px-5 py-4 border-b border-[#cbcbcb] relative z-20">
                     {/* Title row — always its own line so it never truncates */}
                     <div className="flex items-center gap-3 mb-4">
-                        <h1 className="text-2xl md:text-3xl font-black text-[#818181] tracking-tight">Inventory</h1>
-                        <span className="shrink-0 text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-full border border-[#cbcbcb] bg-[#dddddd] text-[#a6a6a6]">
+                        <h1 className="text-2xl md:text-3xl font-semibold text-[#818181] tracking-tight">Inventory</h1>
+                        <span className="shrink-0 text-[10px] font-semibold uppercase tracking-widest px-2 py-1 rounded-full border border-[#cbcbcb] bg-[#dddddd] text-[#a6a6a6]">
                             Read-only
                         </span>
                     </div>
@@ -710,7 +710,7 @@ const Inventory = () => {
                                 onChange={(e) => setBranchId(e.target.value)}
                                 disabled={branchesLoading || branches.length === 0}
                                 aria-label="Select branch"
-                                className="h-11 px-4 w-[200px] bg-white border border-[#cbcbcb] rounded-xl hover:bg-[#dddddd] transition-all font-bold text-sm shadow-sm disabled:opacity-50"
+                                className="h-11 px-4 w-[200px] bg-white border border-[#cbcbcb] rounded-xl hover:bg-[#dddddd] transition-all font-medium text-sm shadow-sm disabled:opacity-50"
                             >
                                 {branchesLoading ? <option value="">{`Loading branches${ELLIPSIS}`}</option> : null}
                                 {!branchesLoading && branches.length === 0 ? <option value="">No branches</option> : null}
@@ -731,7 +731,7 @@ const Inventory = () => {
                                     onChange={(e) => setSearch(e.target.value)}
                                     aria-label="Search inventory"
                                     placeholder={`Search inventory${ELLIPSIS}`}
-                                    className="w-full h-11 pl-9 pr-3 bg-white border border-[#cbcbcb] rounded-xl hover:bg-[#dddddd] transition-all text-sm font-bold text-[#818181] placeholder:text-[#a1a1aa] shadow-sm"
+                                    className="w-full h-11 pl-9 pr-3 bg-white border border-[#cbcbcb] rounded-xl hover:bg-[#dddddd] transition-all text-sm font-medium text-[#818181] placeholder:text-[#a1a1aa] shadow-sm"
                                 />
                             </div>
 
@@ -744,7 +744,7 @@ const Inventory = () => {
                                     value={stockSort}
                                     onChange={(e) => setStockSort(e.target.value)}
                                     aria-label="Sort stock"
-                                    className="h-11 px-4 w-full bg-white border border-[#cbcbcb] rounded-xl hover:bg-[#dddddd] transition-all font-bold text-sm shadow-sm"
+                                    className="h-11 px-4 w-full bg-white border border-[#cbcbcb] rounded-xl hover:bg-[#dddddd] transition-all font-medium text-sm shadow-sm"
                                 >
                                     <option value="asc">Stock: Low to High</option>
                                     <option value="desc">Stock: High to Low</option>
@@ -756,7 +756,7 @@ const Inventory = () => {
                                 aria-label="Sort by Stock Level"
                                 className="hidden md:flex w-full md:w-auto items-center h-11 rounded-xl border border-[#cbcbcb] bg-white shadow-sm overflow-hidden"
                             >
-                                <span className="hidden xl:block pl-3 pr-2 text-[10px] font-black uppercase tracking-widest text-[#a6a6a6] whitespace-nowrap select-none">
+                                <span className="hidden xl:block pl-3 pr-2 text-[10px] font-semibold uppercase tracking-widest text-[#a6a6a6] whitespace-nowrap select-none">
                                     Sort by Stock Level
                                 </span>
                                 <div className="hidden xl:block w-px self-stretch bg-zinc-200" />
@@ -766,7 +766,7 @@ const Inventory = () => {
                                     aria-pressed={stockSort === 'asc'}
                                     aria-label="Sort stock: lowest to highest"
                                     title="Lowest to Highest"
-                                    className={`h-full px-3 inline-flex items-center gap-1.5 text-xs font-black transition-colors ${
+                                    className={`h-full px-3 inline-flex items-center gap-1.5 text-xs font-semibold transition-colors ${
                                         stockSort === 'asc'
                                             ? 'bg-[#818181] text-white'
                                             : 'text-[#a6a6a6] hover:bg-[#dddddd] hover:text-[#818181]'
@@ -781,7 +781,7 @@ const Inventory = () => {
                                     aria-pressed={stockSort === 'desc'}
                                     aria-label="Sort stock: highest to lowest"
                                     title="Highest to Lowest"
-                                    className={`h-full px-3 inline-flex items-center gap-1.5 text-xs font-black transition-colors ${
+                                    className={`h-full px-3 inline-flex items-center gap-1.5 text-xs font-semibold transition-colors ${
                                         stockSort === 'desc'
                                             ? 'bg-[#818181] text-white'
                                             : 'text-[#a6a6a6] hover:bg-[#dddddd] hover:text-[#818181]'
@@ -817,7 +817,7 @@ const Inventory = () => {
                                                     <button
                                                         type="button"
                                                         onClick={() => setIsFiltersOpen(true)}
-                                                        className={`w-full px-4 py-3 text-left text-sm font-black inline-flex items-center gap-2 ${
+                                                        className={`w-full px-4 py-3 text-left text-sm font-semibold inline-flex items-center gap-2 ${
                                                             active ? 'bg-[#dddddd] text-[#818181]' : 'text-[#818181]'
                                                         }`}
                                                     >
@@ -827,7 +827,7 @@ const Inventory = () => {
                                                 )}
                                             </Menu.Item>
                                             <div className="px-4 py-2">
-                                                <div className="text-[10px] font-black text-[#a6a6a6] uppercase tracking-widest mb-2">Rows per page</div>
+                                                <div className="text-[10px] font-semibold text-[#a6a6a6] uppercase tracking-widest mb-2">Rows per page</div>
                                                 <div className="grid grid-cols-3 gap-2">
                                                     {[25, 50, 100].map((n) => (
                                                         <Menu.Item key={n}>
@@ -837,7 +837,7 @@ const Inventory = () => {
                                                                     onClick={() => setPageSize(n)}
                                                                     aria-label={`Rows per page: ${n}`}
                                                                     aria-pressed={pageSize === n}
-                                                                    className={`px-3 py-2 rounded-xl border text-xs font-black transition-colors ${
+                                                                    className={`px-3 py-2 rounded-xl border text-xs font-semibold transition-colors ${
                                                                         pageSize === n
                                                                             ? 'border-[#818181] bg-[#818181] text-white'
                                                                             : active
@@ -858,7 +858,7 @@ const Inventory = () => {
                                                     <button
                                                         type="button"
                                                         onClick={() => exportItemsToCsv(filteredItems)}
-                                                        className={`w-full px-4 py-3 text-left text-sm font-black inline-flex items-center gap-2 ${
+                                                        className={`w-full px-4 py-3 text-left text-sm font-semibold inline-flex items-center gap-2 ${
                                                             active ? 'bg-[#dddddd] text-[#818181]' : 'text-[#818181]'
                                                         }`}
                                                     >
@@ -877,7 +877,7 @@ const Inventory = () => {
                 <div className="overflow-auto" style={{maxHeight: 'calc(100vh - 20rem)'}}>
                     <table className="w-full text-left">
                         <thead className="sticky top-0 z-10">
-                            <tr className="bg-white text-[#a6a6a6] text-xs font-black uppercase tracking-widest border-b border-[#cbcbcb]">
+                            <tr className="bg-white text-[#a6a6a6] text-xs font-semibold uppercase tracking-widest border-b border-[#cbcbcb]">
                                 <th className="px-6 py-4">Name</th>
                                 <th className="px-6 py-4">Category</th>
                                 <th className="px-6 py-4">Price</th>
@@ -942,23 +942,23 @@ const Inventory = () => {
                                                         )}
                                                     </button>
                                                     <div>
-                                                        <p className="text-sm font-black text-[#818181] leading-none">{item.name}</p>
-                                                        <p className="text-[10px] text-[#a6a6a6] mt-1 font-bold uppercase tracking-tight">SKU: {item.sku || 'N/A'}</p>
+                                                        <p className="text-sm font-semibold text-[#818181] leading-none">{item.name}</p>
+                                                        <p className="text-[10px] text-[#a6a6a6] mt-1 font-medium uppercase tracking-tight">SKU: {item.sku || 'N/A'}</p>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <span className="text-xs font-black text-[#3f3f46] px-2.5 py-1 bg-white rounded-md border border-[#cbcbcb] uppercase tracking-tighter">
+                                                <span className="text-xs font-semibold text-[#3f3f46] px-2.5 py-1 bg-white rounded-md border border-[#cbcbcb] uppercase tracking-tighter">
                                                     {item.category?.name}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 text-sm font-black text-[#818181]">{PESO}{Number(item.price || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                                            <td className="px-6 py-4 text-sm font-semibold text-[#818181]">{PESO}{Number(item.price || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                                             <td className="px-6 py-4">
                                                 {item.is_service ? (
-                                                    <span className="text-xs text-[#a6a6a6] font-bold uppercase italic tracking-tighter">{EM_DASH} Service</span>
+                                                    <span className="text-xs text-[#a6a6a6] font-medium uppercase italic tracking-tighter">{EM_DASH} Service</span>
                                                 ) : (
                                                     <span
-                                                        className={`text-sm font-black px-3 py-1 rounded-lg border ${
+                                                        className={`text-sm font-semibold px-3 py-1 rounded-lg border ${
                                                             !hasQty
                                                                 ? 'bg-[#dddddd] text-[#a6a6a6] border-[#cbcbcb]'
                                                                 : isNeg || isOut
@@ -978,7 +978,7 @@ const Inventory = () => {
                                             </td>
                                             <td className="px-6 py-4">
                                                 <span
-                                                    className={`text-[10px] font-black px-2 py-0.5 rounded border uppercase tracking-widest ${
+                                                    className={`text-[10px] font-semibold px-2 py-0.5 rounded border uppercase tracking-widest ${
                                                         item.is_service ? 'bg-[#dddddd] text-[#818181] border-[#cbcbcb]' : 'bg-[#dddddd] text-[#818181] border-[#cbcbcb]'
                                                     }`}
                                                 >
@@ -991,7 +991,7 @@ const Inventory = () => {
                             )}
                             {!loading && pagedItems.length === 0 ? (
                                 <tr>
-                                    <td colSpan={5} className="px-6 py-10 text-center text-sm font-bold text-[#a6a6a6]">
+                                    <td colSpan={5} className="px-6 py-10 text-center text-sm font-medium text-[#a6a6a6]">
                                         No items found.
                                     </td>
                                 </tr>
@@ -1001,10 +1001,10 @@ const Inventory = () => {
                 </div>
 
                 <div className="border-t border-[#cbcbcb] bg-white px-4 py-3 flex flex-col md:flex-row md:items-center justify-between gap-3">
-                    <div className="text-xs font-bold text-[#a6a6a6]">
+                    <div className="text-xs font-medium text-[#a6a6a6]">
                         <span aria-label="Results summary">
-                            Showing <span className="text-[#818181] font-black">{filteredItems.length === 0 ? 0 : pageStart + 1}</span>{'\u2013'}<span className="text-[#818181] font-black">{pageEnd}</span> of{' '}
-                            <span className="text-[#818181] font-black">{filteredItems.length}</span>
+                            Showing <span className="text-[#818181] font-semibold">{filteredItems.length === 0 ? 0 : pageStart + 1}</span>{'\u2013'}<span className="text-[#818181] font-semibold">{pageEnd}</span> of{' '}
+                            <span className="text-[#818181] font-semibold">{filteredItems.length}</span>
                         </span>
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-2">
@@ -1014,7 +1014,7 @@ const Inventory = () => {
                                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                                 disabled={safePage <= 1}
                                 aria-label="Previous page"
-                                className="px-3 py-2 rounded-xl border border-[#cbcbcb] bg-white text-xs font-black text-[#818181] hover:bg-[#dddddd] active:bg-[#dddddd] disabled:opacity-50"
+                                className="px-3 py-2 rounded-xl border border-[#cbcbcb] bg-white text-xs font-semibold text-[#818181] hover:bg-[#dddddd] active:bg-[#dddddd] disabled:opacity-50"
                             >
                                 Prev
                             </button>
@@ -1023,7 +1023,7 @@ const Inventory = () => {
                                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                                 disabled={safePage >= totalPages}
                                 aria-label="Next page"
-                                className="px-3 py-2 rounded-xl border border-[#cbcbcb] bg-white text-xs font-black text-[#818181] hover:bg-[#dddddd] active:bg-[#dddddd] disabled:opacity-50"
+                                className="px-3 py-2 rounded-xl border border-[#cbcbcb] bg-white text-xs font-semibold text-[#818181] hover:bg-[#dddddd] active:bg-[#dddddd] disabled:opacity-50"
                             >
                                 Next
                             </button>
@@ -1038,7 +1038,7 @@ const Inventory = () => {
                             }}
                             className="flex items-center gap-2"
                         >
-                            <label className="text-[10px] font-black text-[#a6a6a6] uppercase tracking-widest" htmlFor="jump-to-page">
+                            <label className="text-[10px] font-semibold text-[#a6a6a6] uppercase tracking-widest" htmlFor="jump-to-page">
                                 Jump
                             </label>
                             <input
@@ -1048,19 +1048,19 @@ const Inventory = () => {
                                 value={jumpToPage}
                                 onChange={(e) => setJumpToPage(e.target.value)}
                                 aria-label="Jump to page"
-                                className="w-20 px-3 py-2 border border-[#cbcbcb] rounded-xl text-xs font-black text-[#818181] bg-white"
+                                className="w-20 px-3 py-2 border border-[#cbcbcb] rounded-xl text-xs font-semibold text-[#818181] bg-white"
                                 placeholder={`${safePage}`}
                             />
                             <button
                                 type="submit"
                                 aria-label="Go to page"
-                                className="px-3 py-2 rounded-xl border border-[#cbcbcb] bg-white text-xs font-black text-[#818181] hover:bg-[#dddddd] active:bg-[#dddddd]"
+                                className="px-3 py-2 rounded-xl border border-[#cbcbcb] bg-white text-xs font-semibold text-[#818181] hover:bg-[#dddddd] active:bg-[#dddddd]"
                             >
                                 Go
                             </button>
                         </form>
-                        <div className="text-xs font-bold text-[#a6a6a6] hidden sm:block">
-                            Page <span className="text-[#818181] font-black">{safePage}</span>/<span className="text-[#818181] font-black">{totalPages}</span>
+                        <div className="text-xs font-medium text-[#a6a6a6] hidden sm:block">
+                            Page <span className="text-[#818181] font-semibold">{safePage}</span>/<span className="text-[#818181] font-semibold">{totalPages}</span>
                         </div>
                     </div>
                 </div>
@@ -1077,8 +1077,8 @@ const Inventory = () => {
                                 <Dialog.Panel className="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white shadow-2xl transition-all border border-[#cbcbcb]">
                                     <div className="px-5 py-4 border-b border-[#cbcbcb] flex items-center justify-between gap-3">
                                         <div className="min-w-0">
-                                            <Dialog.Title className="text-sm font-black text-[#818181] truncate">Product Images</Dialog.Title>
-                                            <div className="text-[11px] font-bold text-[#a6a6a6] truncate">{selectedItem?.name || ''}</div>
+                                            <Dialog.Title className="text-sm font-semibold text-[#818181] truncate">Product Images</Dialog.Title>
+                                            <div className="text-[11px] font-medium text-[#a6a6a6] truncate">{selectedItem?.name || ''}</div>
                                         </div>
                                         <button
                                             type="button"
@@ -1091,7 +1091,7 @@ const Inventory = () => {
                                     </div>
 
                                     {imagesError ? (
-                                        <div className="px-5 py-3 border-b border-red-100 bg-[#dddddd] text-sm font-bold text-[#818181]">{imagesError}</div>
+                                        <div className="px-5 py-3 border-b border-red-100 bg-[#dddddd] text-sm font-medium text-[#818181]">{imagesError}</div>
                                     ) : null}
 
                                     <div className="p-5 grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -1113,8 +1113,8 @@ const Inventory = () => {
                                                         <Upload size={18} className="text-[#818181]" />
                                                     </div>
                                                     <div className="min-w-0">
-                                                        <div className="text-sm font-black text-[#818181]">Upload images</div>
-                                                        <div className="text-[11px] font-bold text-[#a6a6a6]">
+                                                        <div className="text-sm font-semibold text-[#818181]">Upload images</div>
+                                                        <div className="text-[11px] font-medium text-[#a6a6a6]">
                                                             Drag & drop or browse. JPEG, PNG, WebP up to 5MB.
                                                         </div>
                                                     </div>
@@ -1134,7 +1134,7 @@ const Inventory = () => {
                                                         <button
                                                             type="button"
                                                             onClick={() => fileInputRef.current?.click()}
-                                                            className="h-10 rounded-xl border border-[#cbcbcb] bg-white text-xs font-black text-[#818181] hover:bg-[#dddddd] active:bg-[#dddddd] flex items-center justify-center gap-1.5 whitespace-nowrap px-2"
+                                                            className="h-10 rounded-xl border border-[#cbcbcb] bg-white text-xs font-semibold text-[#818181] hover:bg-[#dddddd] active:bg-[#dddddd] flex items-center justify-center gap-1.5 whitespace-nowrap px-2"
                                                         >
                                                             <Upload size={13} className="shrink-0" />
                                                             Browse
@@ -1142,7 +1142,7 @@ const Inventory = () => {
                                                         <button
                                                             type="button"
                                                             onClick={() => startCamera()}
-                                                            className="h-10 rounded-xl border border-[#cbcbcb] bg-white text-xs font-black text-[#818181] hover:bg-[#dddddd] active:bg-[#dddddd] flex items-center justify-center gap-1.5 whitespace-nowrap px-2"
+                                                            className="h-10 rounded-xl border border-[#cbcbcb] bg-white text-xs font-semibold text-[#818181] hover:bg-[#dddddd] active:bg-[#dddddd] flex items-center justify-center gap-1.5 whitespace-nowrap px-2"
                                                         >
                                                             <Camera size={13} className="shrink-0" />
                                                             Take Photo
@@ -1151,7 +1151,7 @@ const Inventory = () => {
 
                                                     {/* Camera permission error (shown when overlay fails to open) */}
                                                     {cameraError ? (
-                                                        <div className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-[11px] font-bold text-red-600">
+                                                        <div className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-[11px] font-medium text-red-600">
                                                             {cameraError}
                                                         </div>
                                                     ) : null}
@@ -1160,7 +1160,7 @@ const Inventory = () => {
                                                         type="button"
                                                         onClick={uploadImages}
                                                         disabled={uploading || pendingFiles.length === 0 || !selectedItem?.id}
-                                                        className="h-10 rounded-xl bg-[#818181] text-white text-xs font-black hover:bg-[#818181]/90 active:bg-[#818181]/80 disabled:opacity-50 flex items-center justify-center gap-2"
+                                                        className="h-10 rounded-xl bg-[#818181] text-white text-xs font-semibold hover:bg-[#818181]/90 active:bg-[#818181]/80 disabled:opacity-50 flex items-center justify-center gap-2"
                                                     >
                                                         {uploading ? <Loader2 size={14} className="animate-spin shrink-0" /> : null}
                                                         Upload
@@ -1170,7 +1170,7 @@ const Inventory = () => {
 
                                             {pendingPreviews.length > 0 ? (
                                                 <div className="mt-4">
-                                                    <div className="text-[10px] font-black text-[#a6a6a6] uppercase tracking-widest mb-2">
+                                                    <div className="text-[10px] font-semibold text-[#a6a6a6] uppercase tracking-widest mb-2">
                                                         Preview ({pendingPreviews.length})
                                                     </div>
                                                     <div className="grid grid-cols-3 gap-2">
@@ -1186,21 +1186,21 @@ const Inventory = () => {
 
                                         <div className="lg:col-span-2">
                                             <div className="flex items-center justify-between mb-3">
-                                                <div className="text-[10px] font-black text-[#a6a6a6] uppercase tracking-widest">Images</div>
+                                                <div className="text-[10px] font-semibold text-[#a6a6a6] uppercase tracking-widest">Images</div>
                                                 <button
                                                     type="button"
                                                     onClick={() => selectedItem && loadItemImages(selectedItem)}
                                                     disabled={imagesLoading || !selectedItem?.id}
-                                                    className="h-9 px-3 rounded-xl border border-[#cbcbcb] bg-white text-xs font-black text-[#818181] hover:bg-[#dddddd] disabled:opacity-50"
+                                                    className="h-9 px-3 rounded-xl border border-[#cbcbcb] bg-white text-xs font-semibold text-[#818181] hover:bg-[#dddddd] disabled:opacity-50"
                                                 >
                                                     Refresh
                                                 </button>
                                             </div>
 
                                             {imagesLoading ? (
-                                                <div className="text-sm font-bold text-[#a6a6a6] animate-pulse">Loading images{ELLIPSIS}</div>
+                                                <div className="text-sm font-medium text-[#a6a6a6] animate-pulse">Loading images{ELLIPSIS}</div>
                                             ) : itemImages.length === 0 ? (
-                                                <div className="text-sm font-bold text-[#a6a6a6]">No images yet.</div>
+                                                <div className="text-sm font-medium text-[#a6a6a6]">No images yet.</div>
                                             ) : (
                                                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                                                     {itemImages.map((img) => {
@@ -1210,7 +1210,7 @@ const Inventory = () => {
                                                                 <div className="relative">
                                                                     <img src={src} alt="" className="w-full h-28 object-cover" />
                                                                     {img.is_primary ? (
-                                                                        <div className="absolute top-2 left-2 inline-flex items-center gap-1 px-2 py-1 rounded-full bg-white/90 border border-[#cbcbcb] text-[10px] font-black text-[#818181]">
+                                                                        <div className="absolute top-2 left-2 inline-flex items-center gap-1 px-2 py-1 rounded-full bg-white/90 border border-[#cbcbcb] text-[10px] font-semibold text-[#818181]">
                                                                             <Star size={12} className="text-[#d94a79]" />
                                                                             Primary
                                                                         </div>
@@ -1221,7 +1221,7 @@ const Inventory = () => {
                                                                         type="button"
                                                                         onClick={() => setPrimaryImage(img.id)}
                                                                         disabled={Boolean(img.is_primary)}
-                                                                        className="flex-1 h-9 rounded-xl border border-[#cbcbcb] bg-white text-[11px] font-black text-[#818181] hover:bg-[#dddddd] disabled:opacity-50"
+                                                                        className="flex-1 h-9 rounded-xl border border-[#cbcbcb] bg-white text-[11px] font-semibold text-[#818181] hover:bg-[#dddddd] disabled:opacity-50"
                                                                     >
                                                                         Set primary
                                                                     </button>
@@ -1267,7 +1267,7 @@ const Inventory = () => {
                                 >
                                     <Dialog.Panel className="pointer-events-auto w-screen max-w-sm bg-white h-full shadow-2xl border-l border-[#cbcbcb]">
                                         <div className="p-4 border-b border-[#cbcbcb] flex items-center justify-between">
-                                            <Dialog.Title className="text-sm font-black text-[#818181]">Filters</Dialog.Title>
+                                            <Dialog.Title className="text-sm font-semibold text-[#818181]">Filters</Dialog.Title>
                                             <button
                                                 type="button"
                                                 onClick={() => setIsFiltersOpen(false)}
@@ -1279,14 +1279,14 @@ const Inventory = () => {
                                         </div>
                                         <div className="p-4 space-y-4 overflow-y-auto h-[calc(100%-64px)]">
                                             <div>
-                                                <label className="block text-[10px] font-black text-[#a6a6a6] uppercase tracking-widest mb-1" htmlFor="filters-category">
+                                                <label className="block text-[10px] font-semibold text-[#a6a6a6] uppercase tracking-widest mb-1" htmlFor="filters-category">
                                                     Category
                                                 </label>
                                                 <select
                                                     id="filters-category"
                                                     value={categoryFilter}
                                                     onChange={(e) => setCategoryFilter(e.target.value)}
-                                                    className="w-full px-3 py-2.5 border border-[#cbcbcb] rounded-xl text-sm font-bold text-[#818181] bg-white"
+                                                    className="w-full px-3 py-2.5 border border-[#cbcbcb] rounded-xl text-sm font-medium text-[#818181] bg-white"
                                                 >
                                                     <option value="all">All categories</option>
                                                     {[...categoriesForSelect]
@@ -1299,7 +1299,7 @@ const Inventory = () => {
                                                 </select>
                                             </div>
                                             <div>
-                                                <div className="block text-[10px] font-black text-[#a6a6a6] uppercase tracking-widest mb-1">Stock status</div>
+                                                <div className="block text-[10px] font-semibold text-[#a6a6a6] uppercase tracking-widest mb-1">Stock status</div>
                                                 <div className="grid grid-cols-3 gap-2">
                                                     {[
                                                         ['all', 'All'],
@@ -1311,7 +1311,7 @@ const Inventory = () => {
                                                             type="button"
                                                             onClick={() => setStockStatusFilter(v)}
                                                             aria-pressed={stockStatusFilter === v}
-                                                            className={`px-3 py-2 rounded-xl border text-xs font-black ${
+                                                            className={`px-3 py-2 rounded-xl border text-xs font-semibold ${
                                                                 stockStatusFilter === v ? 'border-[#818181] bg-[#818181] text-white' : 'border-[#cbcbcb] bg-white text-[#818181] hover:bg-[#dddddd]'
                                                             }`}
                                                         >
@@ -1321,7 +1321,7 @@ const Inventory = () => {
                                                 </div>
                                             </div>
                                             <div>
-                                                <div className="block text-[10px] font-black text-[#a6a6a6] uppercase tracking-widest mb-1">Rows per page</div>
+                                                <div className="block text-[10px] font-semibold text-[#a6a6a6] uppercase tracking-widest mb-1">Rows per page</div>
                                                 <div className="grid grid-cols-3 gap-2">
                                                     {[25, 50, 100].map((n) => (
                                                         <button
@@ -1329,7 +1329,7 @@ const Inventory = () => {
                                                             type="button"
                                                             onClick={() => setPageSize(n)}
                                                             aria-pressed={pageSize === n}
-                                                            className={`px-3 py-2 rounded-xl border text-xs font-black ${
+                                                            className={`px-3 py-2 rounded-xl border text-xs font-semibold ${
                                                                 pageSize === n ? 'border-[#818181] bg-[#818181] text-white' : 'border-[#cbcbcb] bg-white text-[#818181] hover:bg-[#dddddd]'
                                                             }`}
                                                         >
@@ -1345,14 +1345,14 @@ const Inventory = () => {
                                                         setCategoryFilter('all');
                                                         setStockStatusFilter('all');
                                                     }}
-                                                    className="flex-1 px-4 py-2.5 rounded-xl border border-[#cbcbcb] bg-white text-sm font-black text-[#818181] hover:bg-[#dddddd] active:bg-[#dddddd]"
+                                                    className="flex-1 px-4 py-2.5 rounded-xl border border-[#cbcbcb] bg-white text-sm font-semibold text-[#818181] hover:bg-[#dddddd] active:bg-[#dddddd]"
                                                 >
                                                     Reset
                                                 </button>
                                                 <button
                                                     type="button"
                                                     onClick={() => setIsFiltersOpen(false)}
-                                                    className="flex-1 px-4 py-2.5 rounded-xl bg-[#818181] text-white text-sm font-black hover:bg-[#818181] active:bg-[#818181]/90"
+                                                    className="flex-1 px-4 py-2.5 rounded-xl bg-[#818181] text-white text-sm font-semibold hover:bg-[#818181] active:bg-[#818181]/90"
                                                 >
                                                     Apply
                                                 </button>

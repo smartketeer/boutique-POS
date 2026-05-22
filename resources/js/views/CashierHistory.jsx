@@ -57,7 +57,7 @@ const CashierHistory = () => {
                     <ReceiptText size={18} className="text-[#2D4F3E]" />
                     <div>
                         <p className="text-xs text-[#a6a6a6] font-medium">Total Sales</p>
-                        <p className="text-sm font-bold text-[#818181]">{PESO}{totalRevenue.toLocaleString()}</p>
+                        <p className="text-sm font-medium text-[#818181]">{PESO}{totalRevenue.toLocaleString()}</p>
                     </div>
                 </div>
             </header>
@@ -135,7 +135,7 @@ const CashierHistory = () => {
                                         </td>
                                         <td className="px-6 py-3 capitalize text-[#a6a6a6] font-medium">{sale.payment_method}</td>
                                         <td className="px-6 py-3 text-right text-[#a6a6a6]">{PESO}{Number(sale.discount || 0).toLocaleString()}</td>
-                                        <td className="px-6 py-3 text-right font-bold text-[#2D4F3E]">
+                                        <td className="px-6 py-3 text-right font-medium text-[#2D4F3E]">
                                             {PESO}{Number(sale.total_amount || 0).toLocaleString()}
                                         </td>
                                     </tr>

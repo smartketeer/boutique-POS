@@ -6,7 +6,7 @@ import { ShieldCheck, RefreshCw, Loader2, MapPin, Check } from 'lucide-react';
 const ToggleSwitch = ({ checked, onChange, title, description, saving }) => (
     <div className="flex items-center justify-between py-5 border-b border-zinc-100 last:border-0 gap-4">
         <div className="space-y-1.5 pr-8">
-            <h3 className="font-black text-[#818181] text-sm">{title}</h3>
+            <h3 className="font-semibold text-[#818181] text-sm">{title}</h3>
             <p className="text-xs text-[#a6a6a6] font-medium leading-relaxed max-w-xl">{description}</p>
         </div>
         <button
@@ -91,21 +91,21 @@ const Settings = () => {
     return (
         <div className="max-w-4xl mx-auto">
             <div className="mb-8">
-                <h1 className="text-2xl md:text-3xl font-black text-[#818181] tracking-tight">System Settings</h1>
+                <h1 className="text-2xl md:text-3xl font-semibold text-[#818181] tracking-tight">System Settings</h1>
                 <p className="text-[#a6a6a6] font-medium text-sm md:text-base mt-2">
                     Control system-wide operations and safety rules for all branches.
                 </p>
             </div>
 
             {error && (
-                <div className="mb-6 p-4 bg-[#dddddd] text-[#818181] border border-[#cbcbcb] rounded-xl text-sm font-bold shadow-sm flex items-center gap-3">
+                <div className="mb-6 p-4 bg-[#dddddd] text-[#818181] border border-[#cbcbcb] rounded-xl text-sm font-medium shadow-sm flex items-center gap-3">
                     <div className="w-1.5 h-1.5 rounded-full bg-red-600"></div>
                     {error}
                 </div>
             )}
 
             {saveSuccess && (
-                <div className="mb-6 p-4 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-xl text-sm font-bold shadow-sm flex items-center gap-3 animate-in fade-in duration-200">
+                <div className="mb-6 p-4 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-xl text-sm font-medium shadow-sm flex items-center gap-3 animate-in fade-in duration-200">
                     <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center">
                         <Check size={14} className="text-emerald-600" />
                     </div>
@@ -120,8 +120,8 @@ const Settings = () => {
                             <ShieldCheck size={20} />
                         </div>
                         <div>
-                            <h2 className="text-base font-black text-[#818181] tracking-tight">Daily Sales Operation</h2>
-                            <p className="text-[10px] font-black text-[#a6a6a6] uppercase tracking-widest mt-0.5">Point of Sale Controls</p>
+                            <h2 className="text-base font-semibold text-[#818181] tracking-tight">Daily Sales Operation</h2>
+                            <p className="text-[10px] font-semibold text-[#a6a6a6] uppercase tracking-widest mt-0.5">Point of Sale Controls</p>
                         </div>
                     </div>
                     
@@ -129,13 +129,13 @@ const Settings = () => {
                         <button
                             onClick={fetchSettings}
                             disabled={saving}
-                            className="h-10 px-4 inline-flex items-center gap-2 rounded-xl border border-[#cbcbcb] bg-white text-sm font-black text-[#818181] hover:bg-[#dddddd] hover:border-[#a6a6a6] transition-all disabled:opacity-50 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#cbcbcb]"
+                            className="h-10 px-4 inline-flex items-center gap-2 rounded-xl border border-[#cbcbcb] bg-white text-sm font-semibold text-[#818181] hover:bg-[#dddddd] hover:border-[#a6a6a6] transition-all disabled:opacity-50 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#cbcbcb]"
                         >
                             <RefreshCw size={16} className="text-[#a6a6a6]" />
                             <span className="hidden sm:inline">Refresh</span>
                         </button>
                         {saving && (
-                            <div className="h-10 px-4 inline-flex items-center gap-2 rounded-xl bg-[#818181]/10 text-sm font-black text-[#818181]">
+                            <div className="h-10 px-4 inline-flex items-center gap-2 rounded-xl bg-[#818181]/10 text-sm font-semibold text-[#818181]">
                                 <Loader2 size={16} className="animate-spin" />
                                 Saving...
                             </div>
@@ -179,7 +179,7 @@ const Settings = () => {
                             <MapPin size={20} />
                         </div>
                         <div>
-                            <h2 className="text-base font-black text-[#818181] tracking-tight">Branch Management</h2>
+                            <h2 className="text-base font-semibold text-[#818181] tracking-tight">Branch Management</h2>
                             <p className="text-xs text-[#a6a6a6] font-medium mt-0.5">Configure branch locations, status, and contact details.</p>
                         </div>
                     </div>

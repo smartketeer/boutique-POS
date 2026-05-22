@@ -93,7 +93,7 @@ const ConfirmDeleteModal = ({
                         </div>
                         <h2
                             id="confirm-delete-title"
-                            className="text-base font-black text-[#3f3f46]"
+                            className="text-base font-semibold text-[#3f3f46]"
                         >
                             {title}
                         </h2>
@@ -118,7 +118,7 @@ const ConfirmDeleteModal = ({
                             {itemName ? (
                                 <>
                                     {' '}
-                                    <span className="font-black text-[#3f3f46]">
+                                    <span className="font-semibold text-[#3f3f46]">
                                         &ldquo;{itemName}&rdquo;
                                     </span>
                                 </>
@@ -153,11 +153,11 @@ const ConfirmDeleteModal = ({
                                         style={{ transition: 'stroke-dasharray 1s linear' }}
                                     />
                                 </svg>
-                                <span className="absolute inset-0 flex items-center justify-center text-[10px] font-black text-amber-700">
+                                <span className="absolute inset-0 flex items-center justify-center text-[10px] font-semibold text-amber-700">
                                     {countdown}
                                 </span>
                             </div>
-                            <p className="text-xs font-bold text-amber-700">
+                            <p className="text-xs font-medium text-amber-700">
                                 Please wait {countdown} second{countdown !== 1 ? 's' : ''} before confirming...
                             </p>
                         </div>
@@ -169,7 +169,7 @@ const ConfirmDeleteModal = ({
                     <button
                         type="button"
                         onClick={onClose}
-                        className="h-10 px-5 rounded-xl border border-[#cbcbcb] bg-white text-sm font-bold text-[#818181] hover:bg-[#dddddd] active:bg-[#cbcbcb] transition-colors"
+                        className="h-10 px-5 rounded-xl border border-[#cbcbcb] bg-white text-sm font-medium text-[#818181] hover:bg-[#dddddd] active:bg-[#cbcbcb] transition-colors"
                     >
                         Cancel
                     </button>
@@ -177,7 +177,7 @@ const ConfirmDeleteModal = ({
                         type="button"
                         onClick={() => canConfirm && onConfirm?.()}
                         disabled={!canConfirm}
-                        className={`h-10 px-5 rounded-xl text-sm font-bold transition-all duration-200 flex items-center gap-2 ${
+                        className={`h-10 px-5 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
                             canConfirm
                                 ? 'bg-red-500 text-white hover:bg-red-600 active:bg-red-700 shadow-sm'
                                 : 'bg-red-200 text-red-400 cursor-not-allowed'

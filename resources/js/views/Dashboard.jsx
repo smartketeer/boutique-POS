@@ -167,7 +167,7 @@ const Dashboard = () => {
         <div className="space-y-8 max-w-[1600px] mx-auto">
             <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-[#818181] tracking-tight">
+                    <h1 className="text-3xl font-medium text-[#818181] tracking-tight">
                         Welcome back, {user?.name}!
                     </h1>
                     <p className="text-[#a6a6a6] mt-2 font-medium">
@@ -185,13 +185,13 @@ const Dashboard = () => {
                             <AlertTriangle size={24} strokeWidth={1.5} />
                         </div>
                         <div>
-                            <h3 className="text-red-600 font-bold text-sm">Inventory Attention Required</h3>
+                            <h3 className="text-red-600 font-medium text-sm">Inventory Attention Required</h3>
                             <p className="text-red-600 text-sm mt-0.5">{stats.lowStockCount} items have fallen below their minimum stock threshold.</p>
                         </div>
                     </div>
                     <button
                         onClick={() => navigate('/admin/inventory')}
-                        className="px-5 py-2.5 bg-white text-red-600 hover:bg-[#dddddd] text-sm font-bold rounded-xl shadow-sm transition-all hover:shadow border border-[#cbcbcb]"
+                        className="px-5 py-2.5 bg-white text-red-600 hover:bg-[#dddddd] text-sm font-medium rounded-xl shadow-sm transition-all hover:shadow border border-[#cbcbcb]"
                     >
                         Review Inventory
                     </button>
@@ -211,8 +211,8 @@ const Dashboard = () => {
                                     <Icon size={24} strokeWidth={1.5} />
                                 </span>
                             </div>
-                            <h3 className="text-xs font-bold text-[#a6a6a6] uppercase tracking-widest relative z-10">{card.title}</h3>
-                            <p className="text-3xl font-black text-[#818181] mt-2 tracking-tight relative z-10">{card.value}</p>
+                            <h3 className="text-xs font-medium text-[#a6a6a6] uppercase tracking-widest relative z-10">{card.title}</h3>
+                            <p className="text-3xl font-semibold text-[#818181] mt-2 tracking-tight relative z-10">{card.value}</p>
 
                             {/* Decorative background blob */}
                             <div className={`absolute -right-8 -bottom-8 w-40 h-40 rounded-full ${card.blob} blur-3xl pointer-events-none group-hover:scale-125 transition-transform duration-700`}></div>
@@ -227,17 +227,17 @@ const Dashboard = () => {
                     {/* ── Left (wide): Activity Stream ── */}
                     <div className="lg:col-span-2 bg-white border border-[#cbcbcb] rounded-2xl shadow-sm flex flex-col h-[600px] overflow-hidden">
                         <div className="px-6 py-5 border-b border-[#19140005] bg-white sticky top-0 z-10">
-                            <h2 className="text-base font-bold text-[#818181] mb-4">Activity Stream</h2>
+                            <h2 className="text-base font-medium text-[#818181] mb-4">Activity Stream</h2>
                             <div className="flex gap-2 p-1 bg-[#f8f6f3] rounded-xl border border-[#19140005]">
                                 <button
                                     onClick={() => setActiveTab('activity')}
-                                    className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'activity' ? 'bg-white text-[#818181] shadow-sm' : 'text-[#a6a6a6] hover:text-[#818181]'}`}
+                                    className={`flex-1 py-2 text-xs font-medium rounded-lg transition-all ${activeTab === 'activity' ? 'bg-white text-[#818181] shadow-sm' : 'text-[#a6a6a6] hover:text-[#818181]'}`}
                                 >
                                     Cashiers
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('stock')}
-                                    className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'stock' ? 'bg-white text-[#818181] shadow-sm' : 'text-[#a6a6a6] hover:text-[#818181]'}`}
+                                    className={`flex-1 py-2 text-xs font-medium rounded-lg transition-all ${activeTab === 'stock' ? 'bg-white text-[#818181] shadow-sm' : 'text-[#a6a6a6] hover:text-[#818181]'}`}
                                 >
                                     Stock Out/In History
                                 </button>
@@ -270,16 +270,16 @@ const Dashboard = () => {
                                                     <div className="flex-1 min-w-0">
                                                         {/* Header row: name + badges */}
                                                         <div className="flex flex-wrap items-center gap-2 mb-1">
-                                                            <span className="text-sm font-bold text-[#818181]">
+                                                            <span className="text-sm font-medium text-[#818181]">
                                                                 {a.actor?.name || 'Cashier'}
                                                             </span>
                                                             {branchName && (
-                                                                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#4a2437]/10 text-[#4a2437]">
+                                                                <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-[#4a2437]/10 text-[#4a2437]">
                                                                     {branchName}
                                                                 </span>
                                                             )}
                                                             {isSale && (
-                                                                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
+                                                                <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
                                                                     Sale
                                                                 </span>
                                                             )}
@@ -293,7 +293,7 @@ const Dashboard = () => {
                                                                 </p>
                                                                 <p className="text-xs text-[#a6a6a6] mt-1">
                                                                     Total:{' '}
-                                                                    <span className="font-bold text-emerald-600">
+                                                                    <span className="font-medium text-emerald-600">
                                                                         {PESO}{Number(total || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                                                                     </span>
                                                                     {method && <> {BULLET} <span className="capitalize">{method}</span></>}
@@ -338,7 +338,7 @@ const Dashboard = () => {
                                                 <div key={e.id} className="relative flex items-start justify-between gap-4">
                                                     <div className={`absolute left-0 w-4 h-4 rounded-full ${actionColor} border-2 border-white flex-shrink-0 mt-1 z-10`} />
                                                     <div className="pl-6 flex-1 min-w-0">
-                                                        <div className="text-sm font-bold text-[#818181] truncate">{itemName}</div>
+                                                        <div className="text-sm font-medium text-[#818181] truncate">{itemName}</div>
                                                         <div className="text-xs text-[#a6a6a6] mt-1">{line}</div>
                                                     </div>
                                                     <div className="text-[10px] font-medium text-[#cbcbcb] whitespace-nowrap">
@@ -354,7 +354,7 @@ const Dashboard = () => {
                             <div className="mt-6 pt-6 border-t border-zinc-100 flex justify-center">
                                 <button
                                     onClick={() => navigate(activeTab === 'activity' ? '/admin/cashiers' : '/admin/stock-management')}
-                                    className="text-xs font-bold text-[#818181] hover:text-[#d94a79] flex items-center gap-1 transition-colors"
+                                    className="text-xs font-medium text-[#818181] hover:text-[#d94a79] flex items-center gap-1 transition-colors"
                                 >
                                     View Full History <ChevronRight size={14} />
                                 </button>
@@ -370,12 +370,12 @@ const Dashboard = () => {
                                     <Package size={20} strokeWidth={1.5} />
                                 </div>
                                 <div>
-                                    <h2 className="text-base font-bold text-[#818181]">Access Requests</h2>
+                                    <h2 className="text-base font-medium text-[#818181]">Access Requests</h2>
                                     <p className="text-xs text-[#a6a6a6] font-medium mt-0.5">Inventory overrides</p>
                                 </div>
                             </div>
                             {inventoryRequests.length > 0 && (
-                                <div className="bg-[#d94a79]/10 text-[#d94a79] px-3.5 py-1.5 rounded-full text-xs font-bold border border-[#d94a79]/20 flex items-center gap-1.5">
+                                <div className="bg-[#d94a79]/10 text-[#d94a79] px-3.5 py-1.5 rounded-full text-xs font-medium border border-[#d94a79]/20 flex items-center gap-1.5">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#d94a79] animate-pulse"></span>
                                     {inventoryRequests.length}
                                 </div>
@@ -409,11 +409,11 @@ const Dashboard = () => {
                                         return (
                                             <div key={r.id} className="bg-white border border-[#19140010] rounded-2xl p-4 hover:shadow-md transition-shadow">
                                                 <div className="flex items-center gap-3 mb-3">
-                                                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-zinc-100 to-zinc-200 flex items-center justify-center text-[#a6a6a6] font-bold text-sm shadow-inner flex-shrink-0">
+                                                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-zinc-100 to-zinc-200 flex items-center justify-center text-[#a6a6a6] font-medium text-sm shadow-inner flex-shrink-0">
                                                         {cashierName.charAt(0).toUpperCase()}
                                                     </div>
                                                     <div className="min-w-0">
-                                                        <h4 className="text-sm font-bold text-[#818181] truncate">{cashierName}</h4>
+                                                        <h4 className="text-sm font-medium text-[#818181] truncate">{cashierName}</h4>
                                                         <p className="text-xs text-[#a6a6a6] truncate">{cashierEmail}</p>
                                                     </div>
                                                 </div>
@@ -423,14 +423,14 @@ const Dashboard = () => {
                                                 </div>
                                                 {approved ? (
                                                     <div className="flex flex-col items-center">
-                                                        <span className="text-[10px] uppercase font-bold text-[#a6a6a6] tracking-wider mb-1">OTP Code</span>
-                                                        <span className="font-mono text-lg font-bold text-[#818181] tracking-widest bg-[#dddddd] px-3 py-1 rounded-lg border border-[#cbcbcb]">{r.otp}</span>
+                                                        <span className="text-[10px] uppercase font-medium text-[#a6a6a6] tracking-wider mb-1">OTP Code</span>
+                                                        <span className="font-mono text-lg font-medium text-[#818181] tracking-widest bg-[#dddddd] px-3 py-1 rounded-lg border border-[#cbcbcb]">{r.otp}</span>
                                                     </div>
                                                 ) : (
                                                     <button
                                                         type="button"
                                                         onClick={() => approveInventoryRequest(r.id)}
-                                                        className="w-full px-4 py-2 text-sm font-bold rounded-xl bg-[#818181] text-white hover:bg-[#333] transition-colors shadow-sm"
+                                                        className="w-full px-4 py-2 text-sm font-medium rounded-xl bg-[#818181] text-white hover:bg-[#333] transition-colors shadow-sm"
                                                     >
                                                         Approve
                                                     </button>

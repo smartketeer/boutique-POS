@@ -103,7 +103,7 @@ const Login = () => {
                         )}
                     </div>
                     
-                    <h1 className="text-2xl sm:text-3xl font-bold text-[#818181] tracking-tight">Welcome Back</h1>
+                    <h1 className="text-2xl sm:text-3xl font-medium text-[#818181] tracking-tight">Welcome Back</h1>
                     <p className="mt-2 text-sm text-[#a6a6a6] font-medium">Sign in to your Boutique POS account</p>
                 </div>
                 
@@ -116,7 +116,7 @@ const Login = () => {
                     >
                         <img src={lunaBranch.logoSrc} alt="Luna Branch" className="w-8 h-8 rounded-xl object-contain bg-white border border-zinc-100 shadow-sm" />
                         <div className="text-left">
-                            <div className={`text-[13px] font-bold ${(!isAdminEmail && selectedBranch === lunaBranch.key) ? 'text-indigo-900' : 'text-[#818181]'}`}>Luna</div>
+                            <div className={`text-[13px] font-medium ${(!isAdminEmail && selectedBranch === lunaBranch.key) ? 'text-indigo-900' : 'text-[#818181]'}`}>Luna</div>
                             <div className={`text-[10px] font-medium ${(!isAdminEmail && selectedBranch === lunaBranch.key) ? 'text-[#a6a6a6]' : 'text-[#a6a6a6]'}`}>Branch</div>
                         </div>
                     </button>
@@ -127,7 +127,7 @@ const Login = () => {
                     >
                         <img src={roxasBranch.logoSrc} alt="Roxas Branch" className="w-8 h-8 rounded-xl object-contain bg-white border border-zinc-100 shadow-sm" />
                         <div className="text-left">
-                            <div className={`text-[13px] font-bold ${(!isAdminEmail && selectedBranch === roxasBranch.key) ? 'text-indigo-900' : 'text-[#818181]'}`}>Roxas</div>
+                            <div className={`text-[13px] font-medium ${(!isAdminEmail && selectedBranch === roxasBranch.key) ? 'text-indigo-900' : 'text-[#818181]'}`}>Roxas</div>
                             <div className={`text-[10px] font-medium ${(!isAdminEmail && selectedBranch === roxasBranch.key) ? 'text-[#a6a6a6]' : 'text-[#a6a6a6]'}`}>Branch</div>
                         </div>
                     </button>
@@ -142,7 +142,7 @@ const Login = () => {
 
                 <form onSubmit={handleSubmit} className="space-y-4" autoComplete="off">
                     <div>
-                        <label htmlFor="login-email" className="block text-sm font-bold text-[#818181] mb-2">
+                        <label htmlFor="login-email" className="block text-sm font-medium text-[#818181] mb-2">
                             Email Address
                         </label>
                         <input
@@ -161,7 +161,7 @@ const Login = () => {
                     </div>
                     <div>
                         <div className="flex items-center justify-between mb-2">
-                            <label htmlFor="login-password" className="block text-sm font-bold text-[#818181]">
+                            <label htmlFor="login-password" className="block text-sm font-medium text-[#818181]">
                                 Password
                             </label>
                         </div>
@@ -181,7 +181,7 @@ const Login = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full py-3 px-4 rounded-xl bg-[#818181] text-white font-bold tracking-wide disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#a6a6a6] transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                            className="w-full py-3 px-4 rounded-xl bg-[#818181] text-white font-medium tracking-wide disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#a6a6a6] transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
                         >
                             {loading ? (
                                 <span className="flex items-center justify-center gap-2">

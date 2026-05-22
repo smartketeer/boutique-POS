@@ -59,7 +59,7 @@ const ActivityDetailsModal = ({ open, onClose, activity }) => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 bg-[#f8f9fa] p-4 rounded-xl border border-[#cbcbcb]">
                     {Object.entries(metadata).map(([k, v]) => (
                         <div key={k} className="space-y-1">
-                            <div className="text-[11px] font-black text-[#a6a6a6] uppercase tracking-wider">{k.replace(/_/g, ' ')}</div>
+                            <div className="text-[11px] font-semibold text-[#a6a6a6] uppercase tracking-wider">{k.replace(/_/g, ' ')}</div>
                             <div className="text-sm font-semibold text-[#3f3f46] break-all">
                                 {typeof v === 'object' ? JSON.stringify(v) : String(v)}
                             </div>
@@ -76,7 +76,7 @@ const ActivityDetailsModal = ({ open, onClose, activity }) => {
             <div className="relative w-full max-w-2xl bg-white rounded-2xl border border-[#cbcbcb] shadow-2xl animate-[scaleIn_200ms_ease-out] flex flex-col max-h-[85vh]">
                 <div className="flex items-center justify-between px-6 py-4 border-b border-[#19140015]">
                     <div>
-                        <h2 className="text-base font-black text-[#3f3f46]">Activity Details</h2>
+                        <h2 className="text-base font-semibold text-[#3f3f46]">Activity Details</h2>
                         <p className="text-xs font-semibold text-[#a6a6a6] mt-0.5">{activity.description || activity.event_type}</p>
                     </div>
                     <button type="button" onClick={onClose} className="p-2 -mr-2 text-[#a6a6a6] hover:bg-[#dddddd] hover:text-[#818181] rounded-xl transition-colors">
@@ -533,7 +533,7 @@ const CashierAccounts = () => {
                                                         {a.description || a.event_type || EM_DASH}
                                                     </span>
                                                     {hasDetails && (
-                                                        <span className="inline-flex items-center gap-1 text-[11px] font-black text-[#d94a79] uppercase tracking-wider group-hover:underline">
+                                                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#d94a79] uppercase tracking-wider group-hover:underline">
                                                             <Info size={12} />
                                                             Click to view changes
                                                         </span>

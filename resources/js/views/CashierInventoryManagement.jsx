@@ -656,11 +656,11 @@ const CashierInventoryManagement = () => {
                             <table className="w-full text-sm">
                                 <thead className="bg-[#dddddd] text-[#818181] border-b border-[#cbcbcb]">
                                     <tr>
-                                        <th className="text-left px-6 py-3 font-bold uppercase tracking-wider text-[11px]">Name</th>
-                                        <th className="text-left px-6 py-3 font-bold uppercase tracking-wider text-[11px]">Category</th>
-                                        <th className="text-right px-6 py-3 font-bold uppercase tracking-wider text-[11px]">Price</th>
-                                        <th className="text-right px-6 py-3 font-bold uppercase tracking-wider text-[11px]">Stock</th>
-                                        <th className="text-right px-6 py-3 font-bold uppercase tracking-wider text-[11px]">Actions</th>
+                                        <th className="text-left px-6 py-3 font-medium uppercase tracking-wider text-[11px]">Name</th>
+                                        <th className="text-left px-6 py-3 font-medium uppercase tracking-wider text-[11px]">Category</th>
+                                        <th className="text-right px-6 py-3 font-medium uppercase tracking-wider text-[11px]">Price</th>
+                                        <th className="text-right px-6 py-3 font-medium uppercase tracking-wider text-[11px]">Stock</th>
+                                        <th className="text-right px-6 py-3 font-medium uppercase tracking-wider text-[11px]">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -685,13 +685,13 @@ const CashierInventoryManagement = () => {
                                                         )}
                                                     </button>
                                                     <div>
-                                                        <p className="text-xs font-bold text-[#818181] leading-none">{i.name}</p>
-                                                        <p className="text-[10px] text-[#a6a6a6] mt-1 font-bold uppercase tracking-tight">SKU: {i.sku || 'N/A'}</p>
+                                                        <p className="text-xs font-medium text-[#818181] leading-none">{i.name}</p>
+                                                        <p className="text-[10px] text-[#a6a6a6] mt-1 font-medium uppercase tracking-tight">SKU: {i.sku || 'N/A'}</p>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="px-6 py-3 text-[#a6a6a6] text-xs font-medium">{i.category?.name || '-'}</td>
-                                            <td className="px-6 py-3 text-right font-bold text-[#818181] text-xs">{PESO}{Number(i.price || 0).toLocaleString()}</td>
+                                            <td className="px-6 py-3 text-right font-medium text-[#818181] text-xs">{PESO}{Number(i.price || 0).toLocaleString()}</td>
                                             <td className="px-6 py-3 text-right text-[#a6a6a6] text-xs font-medium">{i.is_service ? '-' : i.stock_qty}</td>
                                             <td className="px-6 py-3">
                                                 <div className="flex justify-end gap-2">
@@ -699,7 +699,7 @@ const CashierInventoryManagement = () => {
                                                         type="button"
                                                         onClick={() => openEditItem(i)}
                                                         disabled={!accessToken}
-                                                        className="px-3 py-1.5 text-xs font-bold text-[#818181] border border-[#cbcbcb] rounded-lg hover:bg-[#dddddd] disabled:opacity-50 inline-flex items-center gap-2 transition-colors"
+                                                        className="px-3 py-1.5 text-xs font-medium text-[#818181] border border-[#cbcbcb] rounded-lg hover:bg-[#dddddd] disabled:opacity-50 inline-flex items-center gap-2 transition-colors"
                                                     >
                                                         <Edit2 size={14} />
                                                         Edit
@@ -708,7 +708,7 @@ const CashierInventoryManagement = () => {
                                                         type="button"
                                                         onClick={() => handleDeleteItem(i)}
                                                         disabled={!accessToken}
-                                                        className="px-3 py-1.5 text-xs font-bold border border-[#cbcbcb] text-red-500 rounded-lg hover:bg-red-50 hover:border-red-200 disabled:opacity-50 inline-flex items-center gap-2 transition-colors"
+                                                        className="px-3 py-1.5 text-xs font-medium border border-[#cbcbcb] text-red-500 rounded-lg hover:bg-red-50 hover:border-red-200 disabled:opacity-50 inline-flex items-center gap-2 transition-colors"
                                                     >
                                                         <Trash2 size={14} />
                                                         Delete
@@ -724,8 +724,8 @@ const CashierInventoryManagement = () => {
 
                         <div className="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-[#cbcbcb] bg-white">
                             <div className="text-xs font-semibold text-[#a6a6a6]">
-                                Page <span className="text-[#818181] font-black">{page}</span>/<span className="text-[#818181] font-black">{totalPages}</span> {BULLET}{' '}
-                                <span className="text-[#818181] font-black">{totalItems}</span> total
+                                Page <span className="text-[#818181] font-semibold">{page}</span>/<span className="text-[#818181] font-semibold">{totalPages}</span> {BULLET}{' '}
+                                <span className="text-[#818181] font-semibold">{totalItems}</span> total
                             </div>
                             <div className="flex items-center gap-2">
                                 <button
@@ -735,7 +735,7 @@ const CashierInventoryManagement = () => {
                                     }}
                                     disabled={page <= 1}
                                     aria-label="Previous page"
-                                    className="h-9 px-3 rounded-xl border border-[#cbcbcb] bg-white text-xs font-bold text-[#818181] hover:bg-[#dddddd] disabled:opacity-50 transition-colors"
+                                    className="h-9 px-3 rounded-xl border border-[#cbcbcb] bg-white text-xs font-medium text-[#818181] hover:bg-[#dddddd] disabled:opacity-50 transition-colors"
                                 >
                                     Prev
                                 </button>
@@ -753,7 +753,7 @@ const CashierInventoryManagement = () => {
                                             add(totalPages);
                                         }
                                         return pages.map((p, idx) => {
-                                            if (p === ELLIPSIS) return <span key={`ellipsis-${idx}`} className="px-2 text-xs font-black text-[#a6a6a6]">{ELLIPSIS}</span>;
+                                            if (p === ELLIPSIS) return <span key={`ellipsis-${idx}`} className="px-2 text-xs font-semibold text-[#a6a6a6]">{ELLIPSIS}</span>;
                                             const pageNum = Number(p);
                                             const active = pageNum === page;
                                             return (
@@ -765,7 +765,7 @@ const CashierInventoryManagement = () => {
                                                     }}
                                                     aria-label={`Go to page ${pageNum}`}
                                                     aria-current={active ? 'page' : undefined}
-                                                    className={`min-w-9 px-3 h-9 rounded-xl border text-xs font-black transition-colors ${
+                                                    className={`min-w-9 px-3 h-9 rounded-xl border text-xs font-semibold transition-colors ${
                                                         active
                                                             ? 'border-[#818181] bg-[#818181] text-white'
                                                             : 'border-[#cbcbcb] bg-white text-[#818181] hover:bg-[#dddddd]'
@@ -784,7 +784,7 @@ const CashierInventoryManagement = () => {
                                     }}
                                     disabled={page >= totalPages}
                                     aria-label="Next page"
-                                    className="h-9 px-3 rounded-xl border border-[#cbcbcb] bg-white text-xs font-bold text-[#818181] hover:bg-[#dddddd] disabled:opacity-50 transition-colors"
+                                    className="h-9 px-3 rounded-xl border border-[#cbcbcb] bg-white text-xs font-medium text-[#818181] hover:bg-[#dddddd] disabled:opacity-50 transition-colors"
                                 >
                                     Next
                                 </button>
@@ -805,7 +805,7 @@ const CashierInventoryManagement = () => {
                                 <Dialog.Panel className="w-full max-w-sm transform overflow-hidden rounded-2xl bg-white p-6 shadow-2xl border border-[#cbcbcb]">
                                     <div className="flex items-start justify-between gap-3 mb-4">
                                         <div>
-                                            <Dialog.Title className="text-lg font-bold text-[#818181]">Admin Approval Required</Dialog.Title>
+                                            <Dialog.Title className="text-lg font-medium text-[#818181]">Admin Approval Required</Dialog.Title>
                                             <p className="text-sm text-[#a6a6a6] mt-1">Ask the admin for the OTP to unlock inventory management.</p>
                                             <p className="text-xs text-[#a6a6a6] mt-2 font-medium">Code expires after 10 minutes.</p>
                                         </div>
@@ -823,21 +823,21 @@ const CashierInventoryManagement = () => {
                                             </div>
                                         ) : null}
                                         <div>
-                                            <label className="block text-xs font-bold text-[#a6a6a6] mb-1">OTP</label>
+                                            <label className="block text-xs font-medium text-[#a6a6a6] mb-1">OTP</label>
                                             <input
                                                 type="password"
                                                 inputMode="numeric"
                                                 autoComplete="one-time-code"
                                                 value={otp}
                                                 onChange={(e) => setOtp(e.target.value)}
-                                                className="w-full px-3 py-2 border border-[#cbcbcb] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#818181]/20 focus:border-[#818181] bg-white text-[#818181] font-bold transition-all"
+                                                className="w-full px-3 py-2 border border-[#cbcbcb] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#818181]/20 focus:border-[#818181] bg-white text-[#818181] font-medium transition-all"
                                             />
                                         </div>
                                         <button
                                             type="button"
                                             onClick={verifyCode}
                                             disabled={verifying || !otp.trim() || !requestInfo?.request_id}
-                                            className="w-full py-3 bg-[#818181] text-white rounded-xl font-bold hover:bg-[#a6a6a6] transition-colors shadow-sm disabled:opacity-50"
+                                            className="w-full py-3 bg-[#818181] text-white rounded-xl font-medium hover:bg-[#a6a6a6] transition-colors shadow-sm disabled:opacity-50"
                                         >
                                             Verify OTP
                                         </button>
@@ -845,7 +845,7 @@ const CashierInventoryManagement = () => {
                                             type="button"
                                             onClick={requestNewCode}
                                             disabled={requesting || !canResend}
-                                            className="w-full py-3 border border-[#cbcbcb] text-[#818181] rounded-xl font-bold hover:bg-[#dddddd] transition-colors disabled:opacity-50"
+                                            className="w-full py-3 border border-[#cbcbcb] text-[#818181] rounded-xl font-medium hover:bg-[#dddddd] transition-colors disabled:opacity-50"
                                         >
                                             {canResend
                                                 ? requestInfo?.request_id
@@ -871,7 +871,7 @@ const CashierInventoryManagement = () => {
                             <Transition.Child as={React.Fragment} enter="ease-out duration-200" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-150" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
                                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 shadow-2xl border border-[#cbcbcb]">
                                     <div className="flex items-center justify-between mb-4">
-                                        <Dialog.Title className="text-lg font-bold text-[#818181]">{editingItem ? 'Edit Item' : 'Add Item'}</Dialog.Title>
+                                        <Dialog.Title className="text-lg font-medium text-[#818181]">{editingItem ? 'Edit Item' : 'Add Item'}</Dialog.Title>
                                         <button type="button" onClick={() => setIsItemModalOpen(false)} className="p-2 rounded-xl text-[#cbcbcb] hover:text-[#818181] hover:bg-[#dddddd] transition-colors">
                                             <X size={18} />
                                         </button>
@@ -883,7 +883,7 @@ const CashierInventoryManagement = () => {
                                             <select
                                                 value={itemForm.category_id}
                                                 onChange={(e) => setItemForm((f) => ({ ...f, category_id: e.target.value }))}
-                                                className="w-full px-3 py-2 border border-[#cbcbcb] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#818181]/20 focus:border-[#818181] bg-white text-[#818181] font-bold transition-all"
+                                                className="w-full px-3 py-2 border border-[#cbcbcb] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#818181]/20 focus:border-[#818181] bg-white text-[#818181] font-medium transition-all"
                                                 required
                                             >
                                                 {categories.map((c) => (
@@ -899,7 +899,7 @@ const CashierInventoryManagement = () => {
                                                 <input
                                                     value={itemForm.name}
                                                     onChange={(e) => setItemForm((f) => ({ ...f, name: e.target.value }))}
-                                                    className="w-full px-3 py-2 border border-[#cbcbcb] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#818181]/20 focus:border-[#818181] bg-white text-[#818181] font-bold transition-all"
+                                                    className="w-full px-3 py-2 border border-[#cbcbcb] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#818181]/20 focus:border-[#818181] bg-white text-[#818181] font-medium transition-all"
                                                     required
                                                 />
                                             </div>
@@ -908,7 +908,7 @@ const CashierInventoryManagement = () => {
                                                 <input
                                                     value={itemForm.sku}
                                                     onChange={(e) => setItemForm((f) => ({ ...f, sku: e.target.value }))}
-                                                    className="w-full px-3 py-2 border border-[#cbcbcb] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#818181]/20 focus:border-[#818181] bg-white text-[#818181] font-bold transition-all"
+                                                    className="w-full px-3 py-2 border border-[#cbcbcb] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#818181]/20 focus:border-[#818181] bg-white text-[#818181] font-medium transition-all"
                                                 />
                                             </div>
                                         </div>
@@ -921,7 +921,7 @@ const CashierInventoryManagement = () => {
                                                     step="0.01"
                                                     value={itemForm.price}
                                                     onChange={(e) => setItemForm((f) => ({ ...f, price: e.target.value }))}
-                                                    className="w-full px-3 py-2 border border-[#cbcbcb] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#818181]/20 focus:border-[#818181] bg-white text-[#818181] font-bold transition-all"
+                                                    className="w-full px-3 py-2 border border-[#cbcbcb] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#818181]/20 focus:border-[#818181] bg-white text-[#818181] font-medium transition-all"
                                                     required
                                                 />
                                             </div>
@@ -933,7 +933,7 @@ const CashierInventoryManagement = () => {
                                                     step="0.01"
                                                     value={itemForm.cost}
                                                     onChange={(e) => setItemForm((f) => ({ ...f, cost: e.target.value }))}
-                                                    className="w-full px-3 py-2 border border-[#cbcbcb] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#818181]/20 focus:border-[#818181] bg-white text-[#818181] font-bold transition-all"
+                                                    className="w-full px-3 py-2 border border-[#cbcbcb] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#818181]/20 focus:border-[#818181] bg-white text-[#818181] font-medium transition-all"
                                                     required
                                                 />
                                             </div>
@@ -945,7 +945,7 @@ const CashierInventoryManagement = () => {
                                                     step="1"
                                                     value={itemForm.stock_qty}
                                                     onChange={(e) => setItemForm((f) => ({ ...f, stock_qty: e.target.value }))}
-                                                    className="w-full px-3 py-2 border border-[#cbcbcb] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#818181]/20 focus:border-[#818181] bg-white text-[#818181] font-bold transition-all"
+                                                    className="w-full px-3 py-2 border border-[#cbcbcb] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#818181]/20 focus:border-[#818181] bg-white text-[#818181] font-medium transition-all"
                                                     required={!itemForm.is_service}
                                                     disabled={itemForm.is_service}
                                                 />
@@ -957,7 +957,7 @@ const CashierInventoryManagement = () => {
                                                 <input
                                                     value={itemForm.adjustment_reason}
                                                     onChange={(e) => setItemForm((f) => ({ ...f, adjustment_reason: e.target.value }))}
-                                                    className="w-full px-3 py-2 border border-[#cbcbcb] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#818181]/20 focus:border-[#818181] bg-white text-[#818181] font-bold transition-all"
+                                                    className="w-full px-3 py-2 border border-[#cbcbcb] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#818181]/20 focus:border-[#818181] bg-white text-[#818181] font-medium transition-all"
                                                     placeholder="Optional"
                                                 />
                                             </div>
@@ -978,14 +978,14 @@ const CashierInventoryManagement = () => {
                                             <button
                                                 type="submit"
                                                 disabled={!accessToken}
-                                                className="flex-1 py-3 bg-[#818181] text-white rounded-xl font-bold hover:bg-[#a6a6a6] shadow-sm transition-colors disabled:opacity-50"
+                                                className="flex-1 py-3 bg-[#818181] text-white rounded-xl font-medium hover:bg-[#a6a6a6] shadow-sm transition-colors disabled:opacity-50"
                                             >
                                                 Save
                                             </button>
                                             <button
                                                 type="button"
                                                 onClick={() => setIsItemModalOpen(false)}
-                                                className="px-4 py-3 border border-[#cbcbcb] text-[#818181] rounded-xl font-bold hover:bg-[#dddddd] transition-colors"
+                                                className="px-4 py-3 border border-[#cbcbcb] text-[#818181] rounded-xl font-medium hover:bg-[#dddddd] transition-colors"
                                             >
                                                 Cancel
                                             </button>
@@ -1010,31 +1010,31 @@ const CashierInventoryManagement = () => {
                                 <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white shadow-2xl border border-[#cbcbcb]">
                                     <div className="px-5 py-4 border-b border-[#cbcbcb] flex items-center justify-between gap-3">
                                         <div className="min-w-0">
-                                            <Dialog.Title className="text-sm font-black text-[#818181] truncate">Product Photos</Dialog.Title>
-                                            <div className="text-[11px] font-bold text-[#a6a6a6] truncate">{photoItem?.name}</div>
+                                            <Dialog.Title className="text-sm font-semibold text-[#818181] truncate">Product Photos</Dialog.Title>
+                                            <div className="text-[11px] font-medium text-[#a6a6a6] truncate">{photoItem?.name}</div>
                                         </div>
                                         <button type="button" onClick={() => { stopCamera(); setIsPhotoModalOpen(false); }} className="p-2 rounded-xl border border-[#cbcbcb] hover:bg-[#dddddd]"><X size={18} /></button>
                                     </div>
-                                    {imagesError && <div className="px-5 py-2 bg-red-50 text-red-600 text-xs font-bold border-b border-red-100">{imagesError}</div>}
+                                    {imagesError && <div className="px-5 py-2 bg-red-50 text-red-600 text-xs font-medium border-b border-red-100">{imagesError}</div>}
                                     <div className="p-5 grid grid-cols-1 lg:grid-cols-3 gap-4">
                                         {/* Upload Panel */}
                                         <div className="lg:col-span-1">
                                             <div className="rounded-2xl border-2 border-dashed border-[#cbcbcb] bg-[#f9f9f9] p-4">
                                                 <div className="flex items-center gap-3 mb-4">
                                                     <div className="w-9 h-9 rounded-xl border border-[#cbcbcb] bg-white flex items-center justify-center"><Upload size={16} className="text-[#818181]" /></div>
-                                                    <div><div className="text-sm font-black text-[#818181]">Add Photos</div><div className="text-[10px] text-[#a6a6a6]">JPEG, PNG, WebP · max 5MB</div></div>
+                                                    <div><div className="text-sm font-semibold text-[#818181]">Add Photos</div><div className="text-[10px] text-[#a6a6a6]">JPEG, PNG, WebP · max 5MB</div></div>
                                                 </div>
                                                 <input ref={fileInputRef} type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={e => setPendingFromFiles(e.target.files)} className="hidden" />
                                                 <div className="grid grid-cols-2 gap-2 mb-2">
-                                                    <button type="button" onClick={() => fileInputRef.current?.click()} className="h-10 rounded-xl border border-[#cbcbcb] bg-white text-xs font-black text-[#818181] hover:bg-[#dddddd] flex items-center justify-center gap-1.5"><Upload size={13} />Browse</button>
-                                                    <button type="button" onClick={() => startCamera()} className="h-10 rounded-xl border border-[#cbcbcb] bg-white text-xs font-black text-[#818181] hover:bg-[#dddddd] flex items-center justify-center gap-1.5"><Camera size={13} />Camera</button>
+                                                    <button type="button" onClick={() => fileInputRef.current?.click()} className="h-10 rounded-xl border border-[#cbcbcb] bg-white text-xs font-semibold text-[#818181] hover:bg-[#dddddd] flex items-center justify-center gap-1.5"><Upload size={13} />Browse</button>
+                                                    <button type="button" onClick={() => startCamera()} className="h-10 rounded-xl border border-[#cbcbcb] bg-white text-xs font-semibold text-[#818181] hover:bg-[#dddddd] flex items-center justify-center gap-1.5"><Camera size={13} />Camera</button>
                                                 </div>
                                                 {pendingPreviews.length > 0 && (
                                                     <div className="grid grid-cols-3 gap-1.5 mb-2">
                                                         {pendingPreviews.map(p => <img key={p.url} src={p.url} alt="" className="w-full h-16 object-cover rounded-lg border border-[#cbcbcb]" />)}
                                                     </div>
                                                 )}
-                                                <button type="button" onClick={uploadImages} disabled={uploading || pendingFiles.length === 0} className="w-full h-10 rounded-xl bg-[#818181] text-white text-xs font-black hover:bg-[#555] disabled:opacity-50 flex items-center justify-center gap-2">
+                                                <button type="button" onClick={uploadImages} disabled={uploading || pendingFiles.length === 0} className="w-full h-10 rounded-xl bg-[#818181] text-white text-xs font-semibold hover:bg-[#555] disabled:opacity-50 flex items-center justify-center gap-2">
                                                     {uploading ? <Loader2 size={14} className="animate-spin" /> : null}
                                                     {uploading ? 'Uploading…' : `Upload${pendingFiles.length > 0 ? ` (${pendingFiles.length})` : ''}`}
                                                 </button>
@@ -1043,8 +1043,8 @@ const CashierInventoryManagement = () => {
                                         {/* Gallery Panel */}
                                         <div className="lg:col-span-2">
                                             <div className="flex items-center justify-between mb-3">
-                                                <div className="text-[10px] font-black text-[#a6a6a6] uppercase tracking-widest">Saved Images</div>
-                                                <button type="button" onClick={reloadImages} disabled={imagesLoading} className="h-8 px-3 rounded-xl border border-[#cbcbcb] bg-white text-xs font-black text-[#818181] hover:bg-[#dddddd] disabled:opacity-50">Refresh</button>
+                                                <div className="text-[10px] font-semibold text-[#a6a6a6] uppercase tracking-widest">Saved Images</div>
+                                                <button type="button" onClick={reloadImages} disabled={imagesLoading} className="h-8 px-3 rounded-xl border border-[#cbcbcb] bg-white text-xs font-semibold text-[#818181] hover:bg-[#dddddd] disabled:opacity-50">Refresh</button>
                                             </div>
                                             {imagesLoading ? (
                                                 <div className="text-sm text-[#a6a6a6] animate-pulse">Loading…</div>
@@ -1059,10 +1059,10 @@ const CashierInventoryManagement = () => {
                                                             <div key={img.id} className="rounded-2xl border border-[#cbcbcb] bg-white overflow-hidden">
                                                                 <div className="relative">
                                                                     <img src={src} alt="" className="w-full h-24 object-cover" />
-                                                                    {isPrimary && <div className="absolute top-1.5 left-1.5 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-white/90 border border-[#cbcbcb] text-[9px] font-black text-[#818181]"><Star size={10} className="text-[#d94a79]" />Primary</div>}
+                                                                    {isPrimary && <div className="absolute top-1.5 left-1.5 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-white/90 border border-[#cbcbcb] text-[9px] font-semibold text-[#818181]"><Star size={10} className="text-[#d94a79]" />Primary</div>}
                                                                 </div>
                                                                 <div className="p-1.5 flex gap-1.5">
-                                                                    <button type="button" onClick={() => setImagePrimary(img.id)} disabled={isPrimary} className="flex-1 h-8 rounded-lg border border-[#cbcbcb] bg-white text-[10px] font-black text-[#818181] hover:bg-[#dddddd] disabled:opacity-40">Set primary</button>
+                                                                    <button type="button" onClick={() => setImagePrimary(img.id)} disabled={isPrimary} className="flex-1 h-8 rounded-lg border border-[#cbcbcb] bg-white text-[10px] font-semibold text-[#818181] hover:bg-[#dddddd] disabled:opacity-40">Set primary</button>
                                                                     <button type="button" onClick={() => deleteImage(img.id)} className="h-8 w-8 rounded-lg border border-[#cbcbcb] bg-white text-[#818181] hover:bg-red-50 hover:text-red-500 hover:border-red-200 flex items-center justify-center flex-shrink-0"><Trash2 size={13} /></button>
                                                                 </div>
                                                             </div>

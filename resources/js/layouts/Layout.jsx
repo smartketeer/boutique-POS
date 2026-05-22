@@ -32,7 +32,7 @@ const LiveClock = () => {
     const timeOptions = { hour: 'numeric', minute: '2-digit', hour12: true };
 
     return (
-        <div className="flex items-center gap-2 text-[13px] font-bold text-[#a6a6a6] bg-white border border-[#cbcbcb] px-3 py-1.5 rounded-xl shadow-sm whitespace-nowrap">
+        <div className="flex items-center gap-2 text-[13px] font-medium text-[#a6a6a6] bg-white border border-[#cbcbcb] px-3 py-1.5 rounded-xl shadow-sm whitespace-nowrap">
             <span>{time.toLocaleDateString('en-US', dateOptions)}</span>
             <span className="text-zinc-300">|</span>
             <span className="text-[#818181]">{time.toLocaleTimeString('en-US', timeOptions)}</span>
@@ -208,7 +208,7 @@ const Layout = () => {
                                 <img src={cashierBranding.logoSrc} alt="Logo" className="w-8 h-8 object-contain" />
                             </div>
                             <div className="hidden sm:block">
-                                <div className="text-[15px] font-bold text-[#818181] tracking-tight">{cashierBranding.name}</div>
+                                <div className="text-[15px] font-medium text-[#818181] tracking-tight">{cashierBranding.name}</div>
                                 <div className="text-[11px] font-medium text-[#a6a6a6] uppercase tracking-wider">Point of Sale</div>
                             </div>
                         </div>
@@ -243,11 +243,11 @@ const Layout = () => {
                                     onClick={() => setIsUserMenuOpen((v) => !v)}
                                     className="flex items-center gap-3 pl-2 pr-3 py-1.5 rounded-full bg-white border border-[#cbcbcb] hover:bg-[#dddddd] transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-[#cbcbcb]"
                                 >
-                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#818181] to-[#a6a6a6] text-white flex items-center justify-center font-bold text-sm shadow-inner">
+                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#818181] to-[#a6a6a6] text-white flex items-center justify-center font-medium text-sm shadow-inner">
                                         {user?.name?.charAt(0).toUpperCase()}
                                     </div>
                                     <div className="hidden lg:block text-left">
-                                        <div className="text-[13px] font-bold text-[#818181] leading-none">{user?.name}</div>
+                                        <div className="text-[13px] font-medium text-[#818181] leading-none">{user?.name}</div>
                                         <div className="text-[10px] font-medium text-[#a6a6a6] mt-0.5">Cashier</div>
                                     </div>
                                     <ChevronDown size={14} className="text-[#cbcbcb] hidden lg:block" />
@@ -313,14 +313,14 @@ const Layout = () => {
                         <LayoutDashboard size={20} />
                     </div>
                     <div>
-                        <div className="text-base font-bold text-[#818181] tracking-tight">{branding.name}</div>
+                        <div className="text-base font-medium text-[#818181] tracking-tight">{branding.name}</div>
                         <div className="text-[11px] text-[#a6a6a6] font-semibold uppercase tracking-widest mt-0.5">Workspace</div>
                     </div>
                 </div>
 
                 <div className="flex-1 overflow-y-auto p-4 space-y-6">
                     <div>
-                        <div className="px-3 mb-2 text-[10px] font-bold text-[#cbcbcb] uppercase tracking-wider">Main Navigation</div>
+                        <div className="px-3 mb-2 text-[10px] font-medium text-[#cbcbcb] uppercase tracking-wider">Main Navigation</div>
                         <nav className="space-y-1">
                             {navItems.map((item) => {
                                 const active = location.pathname === item.path;
@@ -348,11 +348,11 @@ const Layout = () => {
 
                 <div className="p-4 border-t border-zinc-100 bg-[#dddddd]/50">
                     <div className="flex items-center gap-3 px-3 py-2 bg-white rounded-2xl border border-[#cbcbcb] shadow-sm mb-3">
-                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#818181] to-[#a6a6a6] text-white flex items-center justify-center font-bold text-sm shadow-inner">
+                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#818181] to-[#a6a6a6] text-white flex items-center justify-center font-medium text-sm shadow-inner">
                             {user?.name?.charAt(0).toUpperCase()}
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-[13px] font-bold text-[#818181] truncate">{user?.name}</p>
+                            <p className="text-[13px] font-medium text-[#818181] truncate">{user?.name}</p>
                             <p className="text-[10px] font-medium text-[#a6a6a6] uppercase tracking-wide truncate">{user?.role}</p>
                         </div>
                     </div>
@@ -376,7 +376,7 @@ const Layout = () => {
                 >
                     <Menu size={18} />
                 </button>
-                <div className="font-bold text-[15px] tracking-tight">{branding.name}</div>
+                <div className="font-medium text-[15px] tracking-tight">{branding.name}</div>
                 {isAdmin ? (
                     <button
                         onClick={() => setIsNotifOpen((v) => !v)}
@@ -424,7 +424,7 @@ const Layout = () => {
                     <div className="absolute inset-0 bg-[#818181]/20 backdrop-blur-sm" onClick={() => setIsNotifOpen(false)} />
                     <div className="relative w-full max-w-sm h-full bg-white shadow-2xl flex flex-col animate-in slide-in-from-right-full duration-300">
                         <div className="px-6 py-5 border-b border-zinc-100 flex items-center justify-between bg-white z-10">
-                            <h3 className="text-lg font-bold text-[#818181]">Notifications</h3>
+                            <h3 className="text-lg font-medium text-[#818181]">Notifications</h3>
                             <button
                                 onClick={() => setIsNotifOpen(false)}
                                 className="p-2 hover:bg-[#dddddd] rounded-full transition-colors"
@@ -438,7 +438,7 @@ const Layout = () => {
                                 <div className="m-4 p-3 bg-[#dddddd] text-[#818181] text-sm font-medium rounded-xl">{notifError}</div>
                             )}
 
-                            <div className="px-4 py-2 mt-2 mb-1 text-[11px] font-bold text-[#cbcbcb] uppercase tracking-wider">
+                            <div className="px-4 py-2 mt-2 mb-1 text-[11px] font-medium text-[#cbcbcb] uppercase tracking-wider">
                                 Inventory Requests
                             </div>
                             
@@ -452,15 +452,15 @@ const Layout = () => {
                                         const approved = Boolean(r?.approved_at);
                                         return (
                                             <div key={r.id} className="p-4 bg-white border border-zinc-100 rounded-2xl shadow-sm">
-                                                <div className="font-bold text-sm text-[#818181]">{r?.cashier?.name || 'Cashier'}</div>
+                                                <div className="font-medium text-sm text-[#818181]">{r?.cashier?.name || 'Cashier'}</div>
                                                 <div className="text-xs text-[#a6a6a6] mt-1">{r.created_at ? new Date(r.created_at).toLocaleTimeString() : ''}</div>
                                                 <div className="mt-3 pt-3 border-t border-zinc-50 flex items-center justify-between">
                                                     {approved ? (
-                                                        <span className="font-mono font-bold text-[#818181] bg-[#dddddd] px-2 py-1 rounded">{r.otp}</span>
+                                                        <span className="font-mono font-medium text-[#818181] bg-[#dddddd] px-2 py-1 rounded">{r.otp}</span>
                                                     ) : (
                                                         <button
                                                             onClick={() => approveRequest(r.id)}
-                                                            className="px-4 py-1.5 bg-[#818181] text-white text-xs font-bold rounded-lg hover:bg-[#a6a6a6] transition-colors"
+                                                            className="px-4 py-1.5 bg-[#818181] text-white text-xs font-medium rounded-lg hover:bg-[#a6a6a6] transition-colors"
                                                         >
                                                             Approve
                                                         </button>
@@ -472,7 +472,7 @@ const Layout = () => {
                                 </div>
                             )}
 
-                            <div className="px-4 py-2 mt-6 mb-1 text-[11px] font-bold text-[#cbcbcb] uppercase tracking-wider">
+                            <div className="px-4 py-2 mt-6 mb-1 text-[11px] font-medium text-[#cbcbcb] uppercase tracking-wider">
                                 Recent Events
                             </div>
 
@@ -503,7 +503,7 @@ const Layout = () => {
                     <div className="absolute inset-0 bg-[#818181]/40 backdrop-blur-sm" onClick={() => setIsNavOpen(false)} />
                     <div className="absolute left-0 top-0 bottom-0 w-72 bg-white shadow-2xl flex flex-col animate-in slide-in-from-left-full">
                         <div className="h-16 px-6 flex items-center justify-between border-b border-zinc-100">
-                            <div className="font-bold text-base tracking-tight">{branding.name}</div>
+                            <div className="font-medium text-base tracking-tight">{branding.name}</div>
                             <button type="button" aria-label="Close menu" onClick={() => setIsNavOpen(false)} className="p-2 -mr-2 text-[#a6a6a6] hover:text-[#818181]">
                                 <X size={20} />
                             </button>
@@ -531,7 +531,7 @@ const Layout = () => {
                         <div className="p-4 border-t border-zinc-100">
                             <button
                                 onClick={handleLogout}
-                                className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-bold text-white bg-[#818181] rounded-xl hover:bg-[#a6a6a6]"
+                                className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-white bg-[#818181] rounded-xl hover:bg-[#a6a6a6]"
                             >
                                 <LogOut size={16} />
                                 Sign Out

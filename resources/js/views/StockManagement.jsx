@@ -246,8 +246,8 @@ const StockManagement = () => {
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                         <div className="min-w-0">
                             <div className="flex items-center gap-2">
-                                <h1 className="text-2xl md:text-3xl font-black text-[#818181] tracking-tight">Stock Management</h1>
-                                <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-full border border-[#cbcbcb] bg-[#dddddd] text-[#a6a6a6]">
+                                <h1 className="text-2xl md:text-3xl font-semibold text-[#818181] tracking-tight">Stock Management</h1>
+                                <span className="text-[10px] font-semibold uppercase tracking-widest px-2 py-1 rounded-full border border-[#cbcbcb] bg-[#dddddd] text-[#a6a6a6]">
                                     Movements
                                 </span>
                             </div>
@@ -262,7 +262,7 @@ const StockManagement = () => {
                                 onChange={(e) => setBranchId(e.target.value)}
                                 disabled={branchesLoading || branches.length === 0}
                                 aria-label="Select branch"
-                                className="h-11 px-4 bg-white border border-[#cbcbcb] rounded-xl hover:bg-[#dddddd] transition-all font-bold text-sm shadow-sm disabled:opacity-50"
+                                className="h-11 px-4 bg-white border border-[#cbcbcb] rounded-xl hover:bg-[#dddddd] transition-all font-medium text-sm shadow-sm disabled:opacity-50"
                             >
                                 {branchesLoading ? <option value="">{`Loading branches${ELLIPSIS}`}</option> : null}
                                 {!branchesLoading && branches.length === 0 ? <option value="">No branches</option> : null}
@@ -279,7 +279,7 @@ const StockManagement = () => {
                                     type="button"
                                     aria-label="Catalog actions"
                                     title="Catalog actions"
-                                    className="h-11 inline-flex items-center justify-center gap-2 px-5 rounded-xl bg-[#818181] text-white hover:bg-[#818181] active:bg-[#818181]/90 transition-all font-black text-sm shadow-md shadow-black/10"
+                                    className="h-11 inline-flex items-center justify-center gap-2 px-5 rounded-xl bg-[#818181] text-white hover:bg-[#818181] active:bg-[#818181]/90 transition-all font-semibold text-sm shadow-md shadow-black/10"
                                 >
                                     <Plus size={18} /> Add
                                 </Menu.Button>
@@ -299,7 +299,7 @@ const StockManagement = () => {
                                                     <button
                                                         type="button"
                                                         onClick={() => setIsAddItemOpen(true)}
-                                                        className={`w-full px-4 py-3 text-left text-sm font-black inline-flex items-center gap-2 ${
+                                                        className={`w-full px-4 py-3 text-left text-sm font-semibold inline-flex items-center gap-2 ${
                                                             active ? 'bg-[#dddddd] text-[#818181]' : 'text-[#818181]'
                                                         }`}
                                                     >
@@ -313,7 +313,7 @@ const StockManagement = () => {
                                                     <button
                                                         type="button"
                                                         onClick={() => setIsAddCategoryOpen(true)}
-                                                        className={`w-full px-4 py-3 text-left text-sm font-black inline-flex items-center gap-2 ${
+                                                        className={`w-full px-4 py-3 text-left text-sm font-semibold inline-flex items-center gap-2 ${
                                                             active ? 'bg-[#dddddd] text-[#818181]' : 'text-[#818181]'
                                                         }`}
                                                     >
@@ -341,7 +341,7 @@ const StockManagement = () => {
                                         type="button"
                                         onClick={() => setTab(t.key)}
                                         aria-pressed={active}
-                                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-black transition-colors ${
+                                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-semibold transition-colors ${
                                             active ? 'border-[#818181] bg-[#818181] text-white' : 'border-[#cbcbcb] bg-white text-[#818181] hover:bg-[#dddddd]'
                                         }`}
                                     >
@@ -351,16 +351,16 @@ const StockManagement = () => {
                                 );
                             })}
                         </div>
-                        <div className="text-xs font-bold text-[#a6a6a6]">{tabConfig.find((t) => t.key === tab)?.helper}</div>
+                        <div className="text-xs font-medium text-[#a6a6a6]">{tabConfig.find((t) => t.key === tab)?.helper}</div>
                     </div>
                 </div>
 
                 <div className="p-5 grid grid-cols-1 lg:grid-cols-3 gap-4">
                     <div className="lg:col-span-1 rounded-2xl border border-[#cbcbcb] bg-white overflow-hidden">
                         <div className="px-4 py-3 border-b border-[#cbcbcb]">
-                            <div className="text-sm font-black text-[#818181]">{entryTitle}</div>
+                            <div className="text-sm font-semibold text-[#818181]">{entryTitle}</div>
                             {selectedItem ? (
-                                <div className="text-[11px] font-bold text-[#a6a6a6] uppercase tracking-widest mt-1">
+                                <div className="text-[11px] font-medium text-[#a6a6a6] uppercase tracking-widest mt-1">
                                     Current stock: {selectedItem.is_service ? EM_DASH : Number(selectedItem.stock_qty || 0)}
                                 </div>
                             ) : null}
@@ -368,7 +368,7 @@ const StockManagement = () => {
 
                         <div className="p-4 space-y-3">
                             <div>
-                                <label className="block text-[10px] font-black text-[#a6a6a6] uppercase tracking-widest mb-1" htmlFor="sm-item-search">
+                                <label className="block text-[10px] font-semibold text-[#a6a6a6] uppercase tracking-widest mb-1" htmlFor="sm-item-search">
                                     Find item
                                 </label>
                                 <input
@@ -377,12 +377,12 @@ const StockManagement = () => {
                                     value={itemSearch}
                                     onChange={(e) => setItemSearch(e.target.value)}
                                     placeholder={`Search by name or SKU${ELLIPSIS}`}
-                                    className="w-full px-3 py-2.5 border border-[#cbcbcb] rounded-xl text-sm font-bold text-[#818181] bg-white"
+                                    className="w-full px-3 py-2.5 border border-[#cbcbcb] rounded-xl text-sm font-medium text-[#818181] bg-white"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-[10px] font-black text-[#a6a6a6] uppercase tracking-widest mb-1" htmlFor="sm-item">
+                                <label className="block text-[10px] font-semibold text-[#a6a6a6] uppercase tracking-widest mb-1" htmlFor="sm-item">
                                     Item
                                 </label>
                                 <select
@@ -390,7 +390,7 @@ const StockManagement = () => {
                                     value={selectedItemId}
                                     onChange={(e) => setSelectedItemId(e.target.value)}
                                     disabled={itemsLoading || filteredItems.length === 0}
-                                    className="w-full px-3 py-2.5 border border-[#cbcbcb] rounded-xl text-sm font-black text-[#818181] bg-white disabled:opacity-50"
+                                    className="w-full px-3 py-2.5 border border-[#cbcbcb] rounded-xl text-sm font-semibold text-[#818181] bg-white disabled:opacity-50"
                                 >
                                     <option value="">Select item</option>
                                     {filteredItems.slice(0, 500).map((it) => (
@@ -400,13 +400,13 @@ const StockManagement = () => {
                                     ))}
                                 </select>
                                 {filteredItems.length > 500 ? (
-                                    <div className="text-[11px] font-bold text-[#a6a6a6] mt-1">Showing first 500 matches. Refine your search.</div>
+                                    <div className="text-[11px] font-medium text-[#a6a6a6] mt-1">Showing first 500 matches. Refine your search.</div>
                                 ) : null}
                             </div>
 
                             {tab !== 'sales' ? (
                                 <div>
-                                    <label className="block text-[10px] font-black text-[#a6a6a6] uppercase tracking-widest mb-1" htmlFor="sm-qty">
+                                    <label className="block text-[10px] font-semibold text-[#a6a6a6] uppercase tracking-widest mb-1" htmlFor="sm-qty">
                                         {qtyLabel}
                                     </label>
                                     <input
@@ -415,7 +415,7 @@ const StockManagement = () => {
                                         inputMode="numeric"
                                         value={qty}
                                         onChange={(e) => setQty(e.target.value)}
-                                        className="w-full px-3 py-2.5 border border-[#cbcbcb] rounded-xl text-sm font-black text-[#818181] bg-white"
+                                        className="w-full px-3 py-2.5 border border-[#cbcbcb] rounded-xl text-sm font-semibold text-[#818181] bg-white"
                                     />
                                 </div>
                             ) : null}
@@ -426,14 +426,14 @@ const StockManagement = () => {
                                         type="button"
                                         onClick={() => setIsStockInDetailsOpen((v) => !v)}
                                         aria-expanded={isStockInDetailsOpen}
-                                        className="w-full px-3 py-2 rounded-xl border border-[#cbcbcb] bg-white text-xs font-black text-[#818181] hover:bg-[#dddddd]"
+                                        className="w-full px-3 py-2 rounded-xl border border-[#cbcbcb] bg-white text-xs font-semibold text-[#818181] hover:bg-[#dddddd]"
                                     >
                                         {isStockInDetailsOpen ? 'Hide supplier details' : 'Add supplier details (optional)'}
                                     </button>
                                     {isStockInDetailsOpen ? (
                                         <>
                                             <div>
-                                                <label className="block text-[10px] font-black text-[#a6a6a6] uppercase tracking-widest mb-1" htmlFor="sm-supplier">
+                                                <label className="block text-[10px] font-semibold text-[#a6a6a6] uppercase tracking-widest mb-1" htmlFor="sm-supplier">
                                                     Supplier (optional)
                                                 </label>
                                                 <input
@@ -441,12 +441,12 @@ const StockManagement = () => {
                                                     type="text"
                                                     value={supplier}
                                                     onChange={(e) => setSupplier(e.target.value)}
-                                                    className="w-full px-3 py-2.5 border border-[#cbcbcb] rounded-xl text-sm font-bold text-[#818181] bg-white"
+                                                    className="w-full px-3 py-2.5 border border-[#cbcbcb] rounded-xl text-sm font-medium text-[#818181] bg-white"
                                                 />
                                             </div>
                                             <div className="grid grid-cols-2 gap-2">
                                                 <div>
-                                                    <label className="block text-[10px] font-black text-[#a6a6a6] uppercase tracking-widest mb-1" htmlFor="sm-unit-cost">
+                                                    <label className="block text-[10px] font-semibold text-[#a6a6a6] uppercase tracking-widest mb-1" htmlFor="sm-unit-cost">
                                                         Unit cost (optional)
                                                     </label>
                                                     <input
@@ -454,11 +454,11 @@ const StockManagement = () => {
                                                         type="number"
                                                         value={unitCost}
                                                         onChange={(e) => setUnitCost(e.target.value)}
-                                                        className="w-full px-3 py-2.5 border border-[#cbcbcb] rounded-xl text-sm font-bold text-[#818181] bg-white"
+                                                        className="w-full px-3 py-2.5 border border-[#cbcbcb] rounded-xl text-sm font-medium text-[#818181] bg-white"
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label className="block text-[10px] font-black text-[#a6a6a6] uppercase tracking-widest mb-1" htmlFor="sm-receipt-date">
+                                                    <label className="block text-[10px] font-semibold text-[#a6a6a6] uppercase tracking-widest mb-1" htmlFor="sm-receipt-date">
                                                         Purchase date (optional)
                                                     </label>
                                                     <input
@@ -466,7 +466,7 @@ const StockManagement = () => {
                                                         type="date"
                                                         value={receiptDate}
                                                         onChange={(e) => setReceiptDate(e.target.value)}
-                                                        className="w-full px-3 py-2.5 border border-[#cbcbcb] rounded-xl text-sm font-bold text-[#818181] bg-white"
+                                                        className="w-full px-3 py-2.5 border border-[#cbcbcb] rounded-xl text-sm font-medium text-[#818181] bg-white"
                                                     />
                                                 </div>
                                             </div>
@@ -476,7 +476,7 @@ const StockManagement = () => {
                             ) : null}
 
                             <div>
-                                <label className="block text-[10px] font-black text-[#a6a6a6] uppercase tracking-widest mb-1" htmlFor="sm-ref">
+                                <label className="block text-[10px] font-semibold text-[#a6a6a6] uppercase tracking-widest mb-1" htmlFor="sm-ref">
                                     Reference (optional)
                                 </label>
                                 <input
@@ -484,11 +484,11 @@ const StockManagement = () => {
                                     type="text"
                                     value={reference}
                                     onChange={(e) => setReference(e.target.value)}
-                                    className="w-full px-3 py-2.5 border border-[#cbcbcb] rounded-xl text-sm font-bold text-[#818181] bg-white"
+                                    className="w-full px-3 py-2.5 border border-[#cbcbcb] rounded-xl text-sm font-medium text-[#818181] bg-white"
                                 />
                             </div>
                             <div>
-                                <label className="block text-[10px] font-black text-[#a6a6a6] uppercase tracking-widest mb-1" htmlFor="sm-notes">
+                                <label className="block text-[10px] font-semibold text-[#a6a6a6] uppercase tracking-widest mb-1" htmlFor="sm-notes">
                                     Notes (optional)
                                 </label>
                                 <input
@@ -496,7 +496,7 @@ const StockManagement = () => {
                                     type="text"
                                     value={notes}
                                     onChange={(e) => setNotes(e.target.value)}
-                                    className="w-full px-3 py-2.5 border border-[#cbcbcb] rounded-xl text-sm font-bold text-[#818181] bg-white"
+                                    className="w-full px-3 py-2.5 border border-[#cbcbcb] rounded-xl text-sm font-medium text-[#818181] bg-white"
                                 />
                             </div>
 
@@ -506,44 +506,44 @@ const StockManagement = () => {
                                         type="button"
                                         onClick={submitMovement}
                                         disabled={!branchId || !selectedItemId}
-                                        className="flex-1 h-11 rounded-xl bg-[#818181] text-white text-sm font-black hover:bg-[#818181] active:bg-[#818181]/90 disabled:opacity-50"
+                                        className="flex-1 h-11 rounded-xl bg-[#818181] text-white text-sm font-semibold hover:bg-[#818181] active:bg-[#818181]/90 disabled:opacity-50"
                                     >
                                         Save
                                     </button>
                                     <button
                                         type="button"
                                         onClick={resetEntryForm}
-                                        className="h-11 px-4 rounded-xl border border-[#cbcbcb] bg-white text-sm font-black text-[#818181] hover:bg-[#dddddd]"
+                                        className="h-11 px-4 rounded-xl border border-[#cbcbcb] bg-white text-sm font-semibold text-[#818181] hover:bg-[#dddddd]"
                                     >
                                         Clear
                                     </button>
                                 </div>
                             ) : (
-                                <div className="text-sm font-bold text-[#a6a6a6]">Sales entries are recorded automatically from POS sales.</div>
+                                <div className="text-sm font-medium text-[#a6a6a6]">Sales entries are recorded automatically from POS sales.</div>
                             )}
                         </div>
                     </div>
 
                     <div className="lg:col-span-2 rounded-2xl border border-[#cbcbcb] bg-white overflow-hidden">
                         <div className="px-4 py-3 border-b border-[#cbcbcb] flex items-center justify-between gap-3">
-                            <div className="text-sm font-black text-[#818181]">Recent entries</div>
+                            <div className="text-sm font-semibold text-[#818181]">Recent entries</div>
                             <button
                                 type="button"
                                 onClick={() => loadMovements(branchId, tab)}
-                                className="h-9 px-3 rounded-xl border border-[#cbcbcb] bg-white text-xs font-black text-[#818181] hover:bg-[#dddddd]"
+                                className="h-9 px-3 rounded-xl border border-[#cbcbcb] bg-white text-xs font-semibold text-[#818181] hover:bg-[#dddddd]"
                             >
                                 Refresh
                             </button>
                         </div>
 
                         {movementsError ? (
-                            <div className="p-4 text-sm font-bold text-[#818181] bg-[#dddddd] border-b border-red-100">{movementsError}</div>
+                            <div className="p-4 text-sm font-medium text-[#818181] bg-[#dddddd] border-b border-red-100">{movementsError}</div>
                         ) : null}
 
                         <div className="overflow-auto" style={{maxHeight: 'calc(100vh - 26rem)'}}>
                             <table className="w-full text-left">
                                 <thead className="sticky top-0 bg-white z-10">
-                                    <tr className="text-[#a6a6a6] text-xs font-black uppercase tracking-widest border-b border-[#cbcbcb]">
+                                    <tr className="text-[#a6a6a6] text-xs font-semibold uppercase tracking-widest border-b border-[#cbcbcb]">
                                         <th className="px-4 py-3">Time</th>
                                         <th className="px-4 py-3">Item</th>
                                         <th className="px-4 py-3">Change</th>
@@ -569,22 +569,22 @@ const StockManagement = () => {
                                             const when = m?.created_at ? new Date(m.created_at) : null;
                                             return (
                                                 <tr key={m.id} className="hover:bg-[#dddddd] transition-colors">
-                                                    <td className="px-4 py-3 text-xs font-bold text-[#a6a6a6] whitespace-nowrap">
+                                                    <td className="px-4 py-3 text-xs font-medium text-[#a6a6a6] whitespace-nowrap">
                                                         {when ? when.toLocaleString() : EM_DASH}
                                                     </td>
                                                     <td className="px-4 py-3">
-                                                        <div className="text-sm font-black text-[#818181]">{m?.item?.name || EM_DASH}</div>
-                                                        <div className="text-[10px] font-bold text-[#a6a6a6] uppercase tracking-widest">
+                                                        <div className="text-sm font-semibold text-[#818181]">{m?.item?.name || EM_DASH}</div>
+                                                        <div className="text-[10px] font-medium text-[#a6a6a6] uppercase tracking-widest">
                                                             {m?.reason || EM_DASH} {m?.item?.sku ? `${BULLET} ${m.item.sku}` : ''}
                                                         </div>
                                                     </td>
                                                     <td className="px-4 py-3">
-                                                        <span className={`text-sm font-black px-2 py-1 rounded-lg border ${isNeg ? 'bg-[#dddddd] text-[#818181] border-[#cbcbcb]' : 'bg-[#dddddd] text-[#818181] border-[#cbcbcb]'}`}>
+                                                        <span className={`text-sm font-semibold px-2 py-1 rounded-lg border ${isNeg ? 'bg-[#dddddd] text-[#818181] border-[#cbcbcb]' : 'bg-[#dddddd] text-[#818181] border-[#cbcbcb]'}`}>
                                                             {delta > 0 ? `+${delta}` : `${delta}`}
                                                         </span>
                                                     </td>
-                                                    <td className="px-4 py-3 text-sm font-black text-[#818181]">{m?.new_qty ?? EM_DASH}</td>
-                                                    <td className="px-4 py-3 text-xs font-bold text-[#a6a6a6]">
+                                                    <td className="px-4 py-3 text-sm font-semibold text-[#818181]">{m?.new_qty ?? EM_DASH}</td>
+                                                    <td className="px-4 py-3 text-xs font-medium text-[#a6a6a6]">
                                                         <div className="truncate max-w-[180px]">{m?.reference || EM_DASH}</div>
                                                     </td>
                                                 </tr>
@@ -593,7 +593,7 @@ const StockManagement = () => {
                                     )}
                                     {!movementsLoading && movements.length === 0 ? (
                                         <tr>
-                                            <td colSpan={5} className="px-4 py-10 text-center text-sm font-bold text-[#a6a6a6]">
+                                            <td colSpan={5} className="px-4 py-10 text-center text-sm font-medium text-[#a6a6a6]">
                                                 No entries yet.
                                             </td>
                                         </tr>
@@ -615,7 +615,7 @@ const StockManagement = () => {
                             <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
                                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-8 shadow-2xl transition-all border border-[#19140015]">
                                     <div className="flex items-center justify-between mb-6">
-                                        <Dialog.Title as="h3" className="text-xl font-black text-[#818181] tracking-tight">
+                                        <Dialog.Title as="h3" className="text-xl font-semibold text-[#818181] tracking-tight">
                                             Add Item
                                         </Dialog.Title>
                                         <button onClick={() => setIsAddItemOpen(false)} className="text-[#a6a6a6] hover:text-[#818181] transition-colors" aria-label="Close">
@@ -624,7 +624,7 @@ const StockManagement = () => {
                                     </div>
                                     <form onSubmit={createItem} className="space-y-4">
                                         <div>
-                                            <label className="block text-xs font-black text-[#a6a6a6] uppercase tracking-widest mb-1">Item Name</label>
+                                            <label className="block text-xs font-semibold text-[#a6a6a6] uppercase tracking-widest mb-1">Item Name</label>
                                             <input
                                                 type="text"
                                                 required
@@ -634,7 +634,7 @@ const StockManagement = () => {
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-black text-[#a6a6a6] uppercase tracking-widest mb-1">SKU (optional)</label>
+                                            <label className="block text-xs font-semibold text-[#a6a6a6] uppercase tracking-widest mb-1">SKU (optional)</label>
                                             <input
                                                 type="text"
                                                 value={newItem.sku}
@@ -643,7 +643,7 @@ const StockManagement = () => {
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-black text-[#a6a6a6] uppercase tracking-widest mb-1">Category</label>
+                                            <label className="block text-xs font-semibold text-[#a6a6a6] uppercase tracking-widest mb-1">Category</label>
                                             <select
                                                 required
                                                 value={newItem.category_id}
@@ -663,7 +663,7 @@ const StockManagement = () => {
                                         </div>
                                         <div className="grid grid-cols-2 gap-4">
                                             <div>
-                                                <label className="block text-xs font-black text-[#a6a6a6] uppercase tracking-widest mb-1">Price ({PESO})</label>
+                                                <label className="block text-xs font-semibold text-[#a6a6a6] uppercase tracking-widest mb-1">Price ({PESO})</label>
                                                 <input
                                                     type="number"
                                                     required
@@ -673,7 +673,7 @@ const StockManagement = () => {
                                                 />
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-black text-[#a6a6a6] uppercase tracking-widest mb-1">Cost ({PESO})</label>
+                                                <label className="block text-xs font-semibold text-[#a6a6a6] uppercase tracking-widest mb-1">Cost ({PESO})</label>
                                                 <input
                                                     type="number"
                                                     required
@@ -684,7 +684,7 @@ const StockManagement = () => {
                                             </div>
                                         </div>
                                         <div className="pt-4">
-                                            <button type="submit" className="w-full py-3 bg-[#818181] text-white rounded-xl font-black text-sm uppercase tracking-widest hover:bg-[#2c2c2a] transition-all shadow-lg shadow-[#81818120]">
+                                            <button type="submit" className="w-full py-3 bg-[#818181] text-white rounded-xl font-semibold text-sm uppercase tracking-widest hover:bg-[#2c2c2a] transition-all shadow-lg shadow-[#81818120]">
                                                 Save Item
                                             </button>
                                         </div>
@@ -706,7 +706,7 @@ const StockManagement = () => {
                             <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
                                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-8 shadow-2xl transition-all border border-[#19140015]">
                                     <div className="flex items-center justify-between mb-6">
-                                        <Dialog.Title as="h3" className="text-xl font-black text-[#818181] tracking-tight">
+                                        <Dialog.Title as="h3" className="text-xl font-semibold text-[#818181] tracking-tight">
                                             Add Category
                                         </Dialog.Title>
                                         <button onClick={() => setIsAddCategoryOpen(false)} className="text-[#a6a6a6] hover:text-[#818181] transition-colors" aria-label="Close">
@@ -715,7 +715,7 @@ const StockManagement = () => {
                                     </div>
                                     <form onSubmit={createCategory} className="space-y-4">
                                         <div>
-                                            <label className="block text-xs font-black text-[#a6a6a6] uppercase tracking-widest mb-1">Category Name</label>
+                                            <label className="block text-xs font-semibold text-[#a6a6a6] uppercase tracking-widest mb-1">Category Name</label>
                                             <input
                                                 type="text"
                                                 required
@@ -725,7 +725,7 @@ const StockManagement = () => {
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-xs font-black text-[#a6a6a6] uppercase tracking-widest mb-1">Type</label>
+                                            <label className="block text-xs font-semibold text-[#a6a6a6] uppercase tracking-widest mb-1">Type</label>
                                             <select
                                                 required
                                                 value={newCategory.type}
@@ -737,7 +737,7 @@ const StockManagement = () => {
                                             </select>
                                         </div>
                                         <div className="pt-4">
-                                            <button type="submit" className="w-full py-3 bg-[#818181] text-white rounded-xl font-black text-sm uppercase tracking-widest hover:bg-[#2c2c2a] transition-all shadow-lg shadow-[#81818120]">
+                                            <button type="submit" className="w-full py-3 bg-[#818181] text-white rounded-xl font-semibold text-sm uppercase tracking-widest hover:bg-[#2c2c2a] transition-all shadow-lg shadow-[#81818120]">
                                                 Save Category
                                             </button>
                                         </div>
