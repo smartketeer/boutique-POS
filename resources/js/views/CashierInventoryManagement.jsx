@@ -407,12 +407,22 @@ const CashierInventoryManagement = () => {
         const fm = mode || facingMode;
         setCameraError(''); setCameraReady(false); setCameraPhase('live'); setCapturedPreview(null); setCameraOpen(true);
         try {
-            if (streamRef.current) { streamRef.current.getTracks().forEach(t => t.stop()); }
+            if (streamRef.current) { streamRef.current.getTracks().forEach(t => t.stop()); streamRef.current = null; }
             const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: fm }, audio: false });
             streamRef.current = stream;
             if (videoRef.current) { videoRef.current.srcObject = stream; await videoRef.current.play(); }
             setCameraReady(true);
-        } catch (e) { setCameraError(e?.message || 'Camera access denied.'); }
+        } catch (e) {
+            if (streamRef.current) { streamRef.current.getTracks().forEach(t => t.stop()); streamRef.current = null; }
+            setCameraOpen(false);
+            if (e?.name === 'NotAllowedError' || e?.name === 'PermissionDeniedError') {
+                setCameraError('Camera permission denied. Please allow camera access in your browser settings.');
+            } else if (e?.name === 'NotFoundError' || e?.name === 'DevicesNotFoundError') {
+                setCameraError('No camera found on this device.');
+            } else {
+                setCameraError('Could not start camera: ' + (e?.message || 'Unknown error.'));
+            }
+        }
     }, [facingMode]);
 
     const switchCamera = () => {
@@ -422,12 +432,35 @@ const CashierInventoryManagement = () => {
 
     const capturePhoto = () => {
         const video = videoRef.current;
-        if (!video || !cameraReady) return;
+        if (!video || !cameraReady) {
+            setCameraError('Camera is not ready. Please wait and try again.');
+            return;
+        }
+        const w = video.videoWidth;
+        const h = video.videoHeight;
+        if (!w || !h || w <= 0 || h <= 0) {
+            setCameraError('Camera video dimensions are invalid. Please retry.');
+            return;
+        }
         const canvas = canvasRef.current || document.createElement('canvas');
-        canvas.width = video.videoWidth; canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0);
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+            setCameraError('Canvas not supported by your browser.');
+            return;
+        }
+        try {
+            ctx.drawImage(video, 0, 0, w, h);
+        } catch (drawErr) {
+            setCameraError('Failed to capture frame: ' + (drawErr?.message || 'Unknown error.'));
+            return;
+        }
         canvas.toBlob(blob => {
-            if (!blob) return;
+            if (!blob) {
+                setCameraError('Failed to encode captured image.');
+                return;
+            }
             const file = new File([blob], `capture_${Date.now()}.jpg`, { type: 'image/jpeg' });
             setCapturedPreview({ url: URL.createObjectURL(blob), file });
             setCameraPhase('preview');

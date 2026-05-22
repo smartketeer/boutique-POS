@@ -76,7 +76,9 @@ const Login = () => {
                 setError(inferred.message || 'Please enter a valid email.');
                 return;
             }
-            await login(email, password);
+            const user = await login(email, password);
+            // The authStore.login already handles branch selection via /api/select-branch
+            // Navigate to the role-appropriate page
             navigate('/');
         } catch (err) {
             const serverEmailError = err.response?.data?.errors?.email?.[0];

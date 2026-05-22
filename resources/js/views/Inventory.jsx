@@ -322,16 +322,28 @@ const Inventory = () => {
     };
 
     const capturePhoto = async () => {
-        if (!videoRef.current || !cameraReady) return;
+        if (!videoRef.current || !cameraReady) {
+            setCameraError('Camera is not ready. Please wait and try again.');
+            return;
+        }
         const video = videoRef.current;
         const w = video.videoWidth || 1280;
         const h = video.videoHeight || 720;
+        if (w <= 0 || h <= 0) {
+            setCameraError('Camera video dimensions are invalid. Please retry.');
+            return;
+        }
         const canvas = document.createElement('canvas');
         canvas.width = w;
         canvas.height = h;
         const ctx = canvas.getContext('2d');
-        if (!ctx) { setCameraError('Canvas not supported.'); return; }
-        ctx.drawImage(video, 0, 0, w, h);
+        if (!ctx) { setCameraError('Canvas not supported by your browser.'); return; }
+        try {
+            ctx.drawImage(video, 0, 0, w, h);
+        } catch (drawErr) {
+            setCameraError('Failed to capture frame: ' + (drawErr?.message || 'Unknown error.'));
+            return;
+        }
         try {
             const blob = await canvasToBlob(canvas, 'image/jpeg', 0.92);
             if (capturedBlobUrlRef.current) {
@@ -352,7 +364,11 @@ const Inventory = () => {
     const usePhotoCapture = () => {
         if (!capturedPreview) return;
         const { file } = capturedPreview;
-        pendingPreviews.forEach((p) => { try { URL.revokeObjectURL(p.url); } catch {} });
+        // Revoke only the camera captured blob URL, not existing pending previews
+        if (capturedBlobUrlRef.current) {
+            try { URL.revokeObjectURL(capturedBlobUrlRef.current); } catch {}
+            capturedBlobUrlRef.current = null;
+        }
         const previewUrl = URL.createObjectURL(file);
         setPendingFiles((prev) => [...prev, file]);
         setPendingPreviews((prev) => [...prev, { name: file.name, url: previewUrl, size: file.size, type: file.type }]);

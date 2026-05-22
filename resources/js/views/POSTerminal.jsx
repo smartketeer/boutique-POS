@@ -295,9 +295,11 @@ const POSTerminal = () => {
     const [itemsLoading, setItemsLoading] = useState(true);
     const [itemsError, setItemsError] = useState('');
     const [posSettings, setPosSettings] = useState({
+        dailySalesEnabled: true,
         priceAdjustmentsEnabled: true,
         customItemsEnabled: true,
     });
+    const [dailySalesModalOpen, setDailySalesModalOpen] = useState(false);
     
     const [customerType, setCustomerType] = useState('walk_in');
     const [discount, setDiscount] = useState(0);
@@ -501,6 +503,7 @@ const POSTerminal = () => {
                 if (!alive) return;
                 setCategories(catRes.data || []);
                 setPosSettings({
+                    dailySalesEnabled: Boolean(settingsRes.data?.daily_sales_enabled),
                     priceAdjustmentsEnabled: Boolean(settingsRes.data?.pos_price_adjustments_enabled),
                     customItemsEnabled: Boolean(settingsRes.data?.pos_custom_items_enabled),
                 });
@@ -515,6 +518,25 @@ const POSTerminal = () => {
             alive = false;
         };
     }, []);
+
+    // Poll settings every 30s to catch admin changes in real-time
+    useEffect(() => {
+        if (loading) return;
+        let alive = true;
+        const refreshSettings = async () => {
+            try {
+                const res = await axios.get('/api/settings');
+                if (!alive) return;
+                setPosSettings({
+                    dailySalesEnabled: Boolean(res.data?.daily_sales_enabled),
+                    priceAdjustmentsEnabled: Boolean(res.data?.pos_price_adjustments_enabled),
+                    customItemsEnabled: Boolean(res.data?.pos_custom_items_enabled),
+                });
+            } catch {}
+        };
+        const id = window.setInterval(refreshSettings, 30000);
+        return () => { alive = false; window.clearInterval(id); };
+    }, [loading]);
 
     useEffect(() => {
         if (loading) return;
@@ -634,12 +656,16 @@ const POSTerminal = () => {
 
     const handleCheckout = async (method) => {
         if (cartItems.length === 0) return;
+        if (!posSettings.dailySalesEnabled) {
+            setDailySalesModalOpen(true);
+            return;
+        }
         if (hasInsufficientStock) {
             setStockNotice('Insufficient Stock: adjust quantities or remove items to continue.');
             return;
         }
         if (overridesDisabled) {
-            alert('Price adjustments or custom items are currently disabled by admin settings. Please remove those changes before checkout.');
+            setStockNotice('Price adjustments or custom items are currently disabled by admin settings. Please remove those changes.');
             return;
         }
         if (requiresOverride && hasMissingOverrideReasons) {
@@ -725,6 +751,22 @@ const POSTerminal = () => {
                             <AlertOctagon size={20} className="text-red-500" />
                         </div>
                         <div className="text-[14px] font-bold text-[#818181]">{stockNotice}</div>
+                    </div>
+                </div>
+            ) : null}
+
+            {/* Persistent banner when daily sales is disabled */}
+            {!posSettings.dailySalesEnabled ? (
+                <div className="mb-4 rounded-2xl border border-[#cbcbcb] bg-gradient-to-r from-zinc-100 via-white to-zinc-100 p-4 shadow-sm flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-[#dddddd] border border-[#cbcbcb] flex items-center justify-center shrink-0 shadow-inner">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#818181" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div className="text-sm font-black text-[#818181]">Daily Sales Currently Disabled</div>
+                        <div className="text-xs text-[#a6a6a6] font-medium mt-0.5">Checkout is blocked. Contact an administrator to re-enable.</div>
                     </div>
                 </div>
             ) : null}
@@ -1450,6 +1492,75 @@ const POSTerminal = () => {
                                                 Done
                                             </button>
                                         </div>
+                                    </div>
+                                </Dialog.Panel>
+                            </Transition.Child>
+                        </div>
+                    </div>
+                </Dialog>
+            </Transition>
+
+            {/* ─── Daily Sales Disabled Modal ─────────────────────────────── */}
+            <Transition appear show={dailySalesModalOpen} as={Fragment}>
+                <Dialog as="div" className="relative z-[60]" onClose={() => setDailySalesModalOpen(false)}>
+                    <Transition.Child
+                        as={Fragment}
+                        enter="ease-out duration-200"
+                        enterFrom="opacity-0"
+                        enterTo="opacity-100"
+                        leave="ease-in duration-150"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                    >
+                        <div className="fixed inset-0 bg-[#818181]/40 backdrop-blur-sm" />
+                    </Transition.Child>
+
+                    <div className="fixed inset-0 overflow-y-auto">
+                        <div className="flex min-h-full items-center justify-center p-4">
+                            <Transition.Child
+                                as={Fragment}
+                                enter="ease-out duration-200"
+                                enterFrom="opacity-0 scale-95"
+                                enterTo="opacity-100 scale-100"
+                                leave="ease-in duration-150"
+                                leaveFrom="opacity-100 scale-100"
+                                leaveTo="opacity-0 scale-95"
+                            >
+                                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white border border-[#cbcbcb] shadow-2xl text-center">
+                                    {/* Header accent bar */}
+                                    <div className="h-1.5 w-full bg-gradient-to-r from-zinc-300 via-zinc-400 to-zinc-300" />
+
+                                    <div className="p-8 space-y-5">
+                                        {/* Icon */}
+                                        <div className="mx-auto w-16 h-16 rounded-2xl bg-[#dddddd] border border-[#cbcbcb] flex items-center justify-center shadow-inner">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#818181" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                                <circle cx="12" cy="12" r="10" />
+                                                <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+                                            </svg>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            <Dialog.Title className="text-xl font-black text-[#818181] tracking-tight">
+                                                Daily Sales Disabled
+                                            </Dialog.Title>
+                                            <p className="text-sm text-[#a6a6a6] font-medium leading-relaxed max-w-xs mx-auto">
+                                                An administrator has temporarily disabled daily sales. New transactions cannot be processed at this time.
+                                            </p>
+                                        </div>
+
+                                        <div className="p-4 bg-[#dddddd]/60 border border-[#cbcbcb] rounded-xl">
+                                            <p className="text-xs text-[#818181] font-bold">
+                                                Please contact your admin to re-enable daily sales operations.
+                                            </p>
+                                        </div>
+
+                                        <button
+                                            type="button"
+                                            onClick={() => setDailySalesModalOpen(false)}
+                                            className="w-full py-3.5 bg-[#818181] text-white rounded-xl font-black text-sm uppercase tracking-wider hover:bg-[#a6a6a6] transition-all shadow-lg"
+                                        >
+                                            Understood
+                                        </button>
                                     </div>
                                 </Dialog.Panel>
                             </Transition.Child>

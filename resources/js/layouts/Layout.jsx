@@ -41,7 +41,7 @@ const LiveClock = () => {
 };
 
 const Layout = () => {
-    const { user, logout } = useAuthStore();
+    const { user, logout, setPosSessionActive } = useAuthStore();
     const navigate = useNavigate();
     const location = useLocation();
     const [isNavOpen, setIsNavOpen] = React.useState(false);
@@ -70,6 +70,7 @@ const Layout = () => {
 
     const handleLogout = async () => {
         try {
+            setPosSessionActive(false);
             await logout();
             navigate('/login');
         } catch (err) {

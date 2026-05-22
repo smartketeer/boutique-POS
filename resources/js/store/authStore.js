@@ -4,29 +4,57 @@ import axios from 'axios';
 
 export const useAuthStore = create(
     persist(
-        (set) => ({
+        (set, get) => ({
             user: null,
             token: null,
             branchName: 'luna branch',
             initialized: false,
+            posSessionActive: false, // tracks whether POS session is active
             setBranchName: (branchName) => set({ branchName }),
+            setPosSessionActive: (active) => set({ posSessionActive: active }),
             resolveBranchName: async (user) => {
-                if (user?.branch?.name) return user.branch.name;
-                if (user?.branch_name) return user.branch_name;
+                // 1. Check active_branch (set via /api/select-branch and returned by /api/me)
+                if (user?.active_branch?.name) return String(user.active_branch.name).toLowerCase();
+                // 2. Check branch relationship
+                if (user?.branch?.name) return String(user.branch.name).toLowerCase();
+                if (user?.branch_name) return String(user.branch_name).toLowerCase();
+                // 3. Check branch_id against branches list
                 if (user?.branch_id != null) {
                     const branches = Array.isArray(user?.branches) ? user.branches : [];
                     const found = branches.find((b) => Number(b?.id) === Number(user.branch_id));
-                    if (found?.name) return found.name;
+                    if (found?.name) return String(found.name).toLowerCase();
                 }
                 return 'luna branch';
             },
             login: async (email, password) => {
                 try {
                     const response = await axios.post('/api/login', { email, password });
-                    const { user, access_token } = response.data;
+                    const { user, access_token, available_branches } = response.data;
                     axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
-                    const branchName = await useAuthStore.getState().resolveBranchName(user);
-                    set({ user, token: access_token, branchName, initialized: true });
+
+                    // If staff user, try to select the correct branch based on email
+                    let branchName = await useAuthStore.getState().resolveBranchName(user);
+                    if (user?.role === 'staff' && Array.isArray(available_branches) && available_branches.length > 0) {
+                        // Determine intended branch from email prefix
+                        const emailPrefix = String(email || '').trim().toLowerCase().split('@')[0] || '';
+                        const matchedBranch = available_branches.find(
+                            (b) => String(b?.name || '').toLowerCase().includes(emailPrefix)
+                        );
+                        const selectedBranch = matchedBranch || available_branches[0];
+                        if (selectedBranch?.id) {
+                            try {
+                                const branchRes = await axios.post('/api/select-branch', { branch_id: selectedBranch.id });
+                                if (branchRes.data?.branch?.name) {
+                                    branchName = String(branchRes.data.branch.name).toLowerCase();
+                                }
+                            } catch (branchErr) {
+                                console.warn('Branch selection failed, using default:', branchErr);
+                            }
+                        }
+                    }
+
+                    const posSessionActive = user?.role === 'staff';
+                    set({ user, token: access_token, branchName, initialized: true, posSessionActive });
                     return user;
                 } catch (error) {
                     console.error('Login error details:', {
@@ -42,11 +70,11 @@ export const useAuthStore = create(
                     await axios.post('/api/logout');
                 } catch {
                 }
-                set({ user: null, token: null, initialized: true });
+                set({ user: null, token: null, posSessionActive: false, initialized: true });
                 delete axios.defaults.headers.common['Authorization'];
             },
             clear: () => {
-                set({ user: null, token: null, initialized: true });
+                set({ user: null, token: null, posSessionActive: false, initialized: true });
                 delete axios.defaults.headers.common['Authorization'];
             },
             init: async () => {
@@ -56,9 +84,10 @@ export const useAuthStore = create(
                     try {
                         const meRes = await axios.get('/api/me');
                         const branchName = await useAuthStore.getState().resolveBranchName(meRes.data);
-                        set({ user: meRes.data, branchName, initialized: true });
+                        const posSessionActive = meRes.data?.role === 'staff' ? state.posSessionActive : false;
+                        set({ user: meRes.data, branchName, posSessionActive, initialized: true });
                     } catch {
-                        set({ user: null, token: null, initialized: true });
+                        set({ user: null, token: null, posSessionActive: false, initialized: true });
                         delete axios.defaults.headers.common['Authorization'];
                     }
                     return;
@@ -68,10 +97,11 @@ export const useAuthStore = create(
         }),
         {
             name: 'auth-storage',
-            storage: createJSONStorage(() => sessionStorage),
+            storage: createJSONStorage(() => localStorage),
             partialize: (state) => ({
                 token: state.token,
                 branchName: state.branchName,
+                posSessionActive: state.posSessionActive,
             }),
             onRehydrateStorage: () => (state) => {
                 if (state?.token) {
