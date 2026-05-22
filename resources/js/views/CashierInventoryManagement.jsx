@@ -1023,36 +1023,59 @@ const CashierInventoryManagement = () => {
             </Transition>
 
             {/* ── Camera Overlay ── */}
-            <div role="dialog" aria-modal="true" aria-label="Camera" style={{ position: 'fixed', inset: 0, zIndex: 200, background: '#000', display: 'flex', flexDirection: 'column', opacity: cameraOpen ? 1 : 0, pointerEvents: cameraOpen ? 'auto' : 'none', transition: 'opacity 0.25s ease' }}>
-                <canvas ref={canvasRef} style={{ display: 'none' }} />
-                {cameraPhase === 'live' ? (
-                    <>
-                        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10, padding: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(to bottom,rgba(0,0,0,.65) 0%,transparent 100%)' }}>
-                            <button type="button" onClick={stopCamera} aria-label="Close camera" style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(255,255,255,.15)', border: '1px solid rgba(255,255,255,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', cursor: 'pointer' }}><X size={20} /></button>
-                            <span style={{ color: '#fff', fontWeight: 900, fontSize: 14 }}>Take Product Photo</span>
-                            <button type="button" aria-label="Flash" style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(255,255,255,.15)', border: '1px solid rgba(255,255,255,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', cursor: 'pointer' }}><Zap size={18} /></button>
+            <Transition show={cameraOpen} as={React.Fragment}>
+                <Dialog as="div" className="relative z-[200]" onClose={stopCamera}>
+                    <Transition.Child
+                        as={React.Fragment}
+                        enter="transition-opacity ease-out duration-200"
+                        enterFrom="opacity-0"
+                        enterTo="opacity-100"
+                        leave="transition-opacity ease-in duration-150"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                    >
+                        <div
+                            style={{
+                                position: 'fixed',
+                                inset: 0,
+                                zIndex: 200,
+                                background: '#000',
+                                display: 'flex',
+                                flexDirection: 'column',
+                            }}
+                        >
+                            <canvas ref={canvasRef} style={{ display: 'none' }} />
+                            {cameraPhase === 'live' ? (
+                                <>
+                                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10, padding: 'calc(env(safe-area-inset-top, 0px) + 16px) 16px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(to bottom,rgba(0,0,0,.65) 0%,transparent 100%)' }}>
+                                        <button type="button" onClick={stopCamera} aria-label="Close camera" style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(255,255,255,.15)', border: '1px solid rgba(255,255,255,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', cursor: 'pointer' }}><X size={20} /></button>
+                                        <span style={{ color: '#fff', fontWeight: 900, fontSize: 14 }}>Take Product Photo</span>
+                                        <button type="button" aria-label="Flash" style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(255,255,255,.15)', border: '1px solid rgba(255,255,255,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', cursor: 'pointer' }}><Zap size={18} /></button>
+                                    </div>
+                                    <video ref={videoRef} autoPlay playsInline muted style={{ flex: 1, width: '100%', objectFit: 'cover' }} />
+                                    {!cameraReady && <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Loader2 size={36} color="#fff" className="animate-spin" /></div>}
+                                    {cameraError && <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: 'rgba(0,0,0,.85)', borderRadius: 16, padding: '20px 24px', maxWidth: 320, textAlign: 'center' }}><p style={{ color: '#fca5a5', fontWeight: 700 }}>{cameraError}</p><button type="button" onClick={stopCamera} style={{ marginTop: 12, padding: '8px 20px', borderRadius: 8, background: '#fff', fontWeight: 700, cursor: 'pointer' }}>Close</button></div>}
+                                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 10, padding: '32px 24px calc(env(safe-area-inset-bottom, 0px) + 32px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(to top,rgba(0,0,0,.7) 0%,transparent 100%)' }}>
+                                        <div style={{ width: 52 }} />
+                                        <button type="button" onClick={capturePhoto} disabled={!cameraReady} aria-label="Capture" style={{ width: 76, height: 76, borderRadius: '50%', background: cameraReady ? '#fff' : 'rgba(255,255,255,.35)', border: '4px solid rgba(255,255,255,.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: cameraReady ? 'pointer' : 'not-allowed' }}><Camera size={28} color="#1f2937" /></button>
+                                        <button type="button" onClick={switchCamera} aria-label="Switch camera" style={{ width: 52, height: 52, borderRadius: '50%', background: 'rgba(255,255,255,.15)', border: '1px solid rgba(255,255,255,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', cursor: 'pointer' }}><RefreshCw size={22} /></button>
+                                    </div>
+                                </>
+                            ) : null}
+                            {cameraPhase === 'preview' && capturedPreview ? (
+                                <>
+                                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10, padding: 'calc(env(safe-area-inset-top, 0px) + 16px) 16px 16px', display: 'flex', justifyContent: 'center', background: 'linear-gradient(to bottom,rgba(0,0,0,.65) 0%,transparent 100%)' }}><span style={{ color: '#fff', fontWeight: 900, fontSize: 14 }}>Preview</span></div>
+                                    <img src={capturedPreview.url} alt="Captured" style={{ flex: 1, width: '100%', objectFit: 'cover' }} />
+                                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 10, padding: '24px 24px calc(env(safe-area-inset-bottom, 0px) + 32px)', display: 'flex', gap: 16, justifyContent: 'center', background: 'linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 100%)' }}>
+                                        <button type="button" onClick={retakePhoto} style={{ flex: 1, maxWidth: 160, height: 52, borderRadius: 26, background: 'rgba(255,255,255,.15)', border: '1px solid rgba(255,255,255,.3)', color: '#fff', fontWeight: 900, cursor: 'pointer' }}>Retake</button>
+                                        <button type="button" onClick={usePhotoCapture} style={{ flex: 1, maxWidth: 160, height: 52, borderRadius: 26, background: '#fff', fontWeight: 900, cursor: 'pointer' }}>Use Photo</button>
+                                    </div>
+                                </>
+                            ) : null}
                         </div>
-                        <video ref={videoRef} autoPlay playsInline muted style={{ flex: 1, width: '100%', objectFit: 'cover' }} />
-                        {!cameraReady && <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Loader2 size={36} color="#fff" className="animate-spin" /></div>}
-                        {cameraError && <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: 'rgba(0,0,0,.85)', borderRadius: 16, padding: '20px 24px', maxWidth: 320, textAlign: 'center' }}><p style={{ color: '#fca5a5', fontWeight: 700 }}>{cameraError}</p><button type="button" onClick={stopCamera} style={{ marginTop: 12, padding: '8px 20px', borderRadius: 8, background: '#fff', fontWeight: 700, cursor: 'pointer' }}>Close</button></div>}
-                        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 10, padding: '32px 24px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(to top,rgba(0,0,0,.7) 0%,transparent 100%)' }}>
-                            <div style={{ width: 52 }} />
-                            <button type="button" onClick={capturePhoto} disabled={!cameraReady} aria-label="Capture" style={{ width: 76, height: 76, borderRadius: '50%', background: cameraReady ? '#fff' : 'rgba(255,255,255,.35)', border: '4px solid rgba(255,255,255,.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: cameraReady ? 'pointer' : 'not-allowed' }}><Camera size={28} color="#1f2937" /></button>
-                            <button type="button" onClick={switchCamera} aria-label="Switch camera" style={{ width: 52, height: 52, borderRadius: '50%', background: 'rgba(255,255,255,.15)', border: '1px solid rgba(255,255,255,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', cursor: 'pointer' }}><RefreshCw size={22} /></button>
-                        </div>
-                    </>
-                ) : null}
-                {cameraPhase === 'preview' && capturedPreview ? (
-                    <>
-                        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10, padding: 16, display: 'flex', justifyContent: 'center', background: 'linear-gradient(to bottom,rgba(0,0,0,.65) 0%,transparent 100%)' }}><span style={{ color: '#fff', fontWeight: 900, fontSize: 14 }}>Preview</span></div>
-                        <img src={capturedPreview.url} alt="Captured" style={{ flex: 1, width: '100%', objectFit: 'cover' }} />
-                        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 10, padding: '24px 24px 40px', display: 'flex', gap: 16, justifyContent: 'center', background: 'linear-gradient(to top,rgba(0,0,0,.75) 0%,transparent 100%)' }}>
-                            <button type="button" onClick={retakePhoto} style={{ flex: 1, maxWidth: 160, height: 52, borderRadius: 26, background: 'rgba(255,255,255,.15)', border: '1px solid rgba(255,255,255,.3)', color: '#fff', fontWeight: 900, cursor: 'pointer' }}>Retake</button>
-                            <button type="button" onClick={usePhotoCapture} style={{ flex: 1, maxWidth: 160, height: 52, borderRadius: 26, background: '#fff', fontWeight: 900, cursor: 'pointer' }}>Use Photo</button>
-                        </div>
-                    </>
-                ) : null}
-            </div>
+                    </Transition.Child>
+                </Dialog>
+            </Transition>
 
 
             {/* ── Universal Delete Confirmation ── */}
