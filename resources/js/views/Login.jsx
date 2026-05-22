@@ -14,21 +14,11 @@ const Login = () => {
     const branchName = useAuthStore((state) => state.branchName);
 
     const branches = [lunaBranch, roxasBranch];
-    const branchEmailByKey = useMemo(
-        () => ({
-            [lunaBranch.key]: 'luna@boutique.com',
-            [roxasBranch.key]: 'roxas@boutique.com',
-        }),
-        []
-    );
+    const [selectedBranch, setSelectedBranch] = useState(lunaBranch.key);
 
     const tryAutofillEmail = (branchKey) => {
-        const candidate = branchEmailByKey[branchKey];
-        if (!candidate) return;
-        const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(candidate);
-        if (!isValid) return;
-        setEmail(candidate);
-        setError('');
+        // Feature removed as requested; now it only sets the selected branch context.
+        setSelectedBranch(branchKey);
     };
 
     useEffect(() => {
@@ -62,10 +52,10 @@ const Login = () => {
     const isAdminEmail = inferred.ok && inferred.localPart === 'admin';
 
     const branding = useMemo(() => {
-        if (inferred.ok && inferred.localPart === 'luna') return lunaBranch;
-        if (inferred.ok && inferred.localPart === 'roxas') return roxasBranch;
-        return branches.find((b) => b.key === String(branchName || '').toLowerCase()) || lunaBranch;
-    }, [branchName, branches, inferred.ok, inferred.localPart]);
+        if (selectedBranch === lunaBranch.key) return lunaBranch;
+        if (selectedBranch === roxasBranch.key) return roxasBranch;
+        return lunaBranch;
+    }, [selectedBranch]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -76,7 +66,7 @@ const Login = () => {
                 setError(inferred.message || 'Please enter a valid email.');
                 return;
             }
-            const user = await login(email, password);
+            const user = await login(email, password, selectedBranch);
             // The authStore.login already handles branch selection via /api/select-branch
             // Navigate to the role-appropriate page
             navigate('/');
@@ -121,24 +111,24 @@ const Login = () => {
                 <div className="grid grid-cols-2 gap-3 mb-6">
                     <button
                         type="button"
-                        onClick={() => tryAutofillEmail(lunaBranch.key)}
-                        className={`flex items-center gap-3 p-3 rounded-2xl border transition-all duration-300 ${(isAdminEmail || branding.key === lunaBranch.key) ? 'bg-[#dddddd] border-[#cbcbcb] ring-1 ring-indigo-200 shadow-sm' : 'bg-white border-[#cbcbcb] hover:bg-[#dddddd] hover:border-[#a6a6a6]'}`}
+                        onClick={() => setSelectedBranch(lunaBranch.key)}
+                        className={`flex items-center gap-3 p-3 rounded-2xl border transition-all duration-300 ${(!isAdminEmail && selectedBranch === lunaBranch.key) ? 'bg-[#dddddd] border-[#cbcbcb] ring-1 ring-indigo-200 shadow-sm' : 'bg-white border-[#cbcbcb] hover:bg-[#dddddd] hover:border-[#a6a6a6]'}`}
                     >
                         <img src={lunaBranch.logoSrc} alt="Luna Branch" className="w-8 h-8 rounded-xl object-contain bg-white border border-zinc-100 shadow-sm" />
                         <div className="text-left">
-                            <div className={`text-[13px] font-bold ${(isAdminEmail || branding.key === lunaBranch.key) ? 'text-indigo-900' : 'text-[#818181]'}`}>Luna</div>
-                            <div className={`text-[10px] font-medium ${(isAdminEmail || branding.key === lunaBranch.key) ? 'text-[#a6a6a6]' : 'text-[#a6a6a6]'}`}>Branch</div>
+                            <div className={`text-[13px] font-bold ${(!isAdminEmail && selectedBranch === lunaBranch.key) ? 'text-indigo-900' : 'text-[#818181]'}`}>Luna</div>
+                            <div className={`text-[10px] font-medium ${(!isAdminEmail && selectedBranch === lunaBranch.key) ? 'text-[#a6a6a6]' : 'text-[#a6a6a6]'}`}>Branch</div>
                         </div>
                     </button>
                     <button
                         type="button"
-                        onClick={() => tryAutofillEmail(roxasBranch.key)}
-                        className={`flex items-center gap-3 p-3 rounded-2xl border transition-all duration-300 ${(isAdminEmail || branding.key === roxasBranch.key) ? 'bg-[#dddddd] border-[#cbcbcb] ring-1 ring-indigo-200 shadow-sm' : 'bg-white border-[#cbcbcb] hover:bg-[#dddddd] hover:border-[#a6a6a6]'}`}
+                        onClick={() => setSelectedBranch(roxasBranch.key)}
+                        className={`flex items-center gap-3 p-3 rounded-2xl border transition-all duration-300 ${(!isAdminEmail && selectedBranch === roxasBranch.key) ? 'bg-[#dddddd] border-[#cbcbcb] ring-1 ring-indigo-200 shadow-sm' : 'bg-white border-[#cbcbcb] hover:bg-[#dddddd] hover:border-[#a6a6a6]'}`}
                     >
                         <img src={roxasBranch.logoSrc} alt="Roxas Branch" className="w-8 h-8 rounded-xl object-contain bg-white border border-zinc-100 shadow-sm" />
                         <div className="text-left">
-                            <div className={`text-[13px] font-bold ${(isAdminEmail || branding.key === roxasBranch.key) ? 'text-indigo-900' : 'text-[#818181]'}`}>Roxas</div>
-                            <div className={`text-[10px] font-medium ${(isAdminEmail || branding.key === roxasBranch.key) ? 'text-[#a6a6a6]' : 'text-[#a6a6a6]'}`}>Branch</div>
+                            <div className={`text-[13px] font-bold ${(!isAdminEmail && selectedBranch === roxasBranch.key) ? 'text-indigo-900' : 'text-[#818181]'}`}>Roxas</div>
+                            <div className={`text-[10px] font-medium ${(!isAdminEmail && selectedBranch === roxasBranch.key) ? 'text-[#a6a6a6]' : 'text-[#a6a6a6]'}`}>Branch</div>
                         </div>
                     </button>
                 </div>

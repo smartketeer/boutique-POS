@@ -26,19 +26,19 @@ export const useAuthStore = create(
                 }
                 return 'luna branch';
             },
-            login: async (email, password) => {
+            login: async (email, password, intendedBranchKey) => {
                 try {
                     const response = await axios.post('/api/login', { email, password });
                     const { user, access_token, available_branches } = response.data;
                     axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
 
-                    // If staff user, try to select the correct branch based on email
+                    // If staff user, try to select the correct branch based on intendedBranchKey (from UI selection)
                     let branchName = await useAuthStore.getState().resolveBranchName(user);
                     if (user?.role === 'staff' && Array.isArray(available_branches) && available_branches.length > 0) {
-                        // Determine intended branch from email prefix
                         const emailPrefix = String(email || '').trim().toLowerCase().split('@')[0] || '';
+                        const branchSearchString = String(intendedBranchKey || emailPrefix).toLowerCase().replace(' branch', '');
                         const matchedBranch = available_branches.find(
-                            (b) => String(b?.name || '').toLowerCase().includes(emailPrefix)
+                            (b) => String(b?.name || '').toLowerCase().includes(branchSearchString)
                         );
                         const selectedBranch = matchedBranch || available_branches[0];
                         if (selectedBranch?.id) {
