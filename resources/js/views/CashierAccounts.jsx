@@ -1,7 +1,95 @@
 import React from 'react';
 import axios from 'axios';
-import { Trash2, Edit2, UserRound, Clock } from 'lucide-react';
+import { Trash2, Edit2, UserRound, Clock, X, Info } from 'lucide-react';
 import ConfirmDeleteModal from '../components/ConfirmDeleteModal';
+
+const ActivityDetailsModal = ({ open, onClose, activity }) => {
+    React.useEffect(() => {
+        if (!open) return;
+        const handler = (e) => { if (e.key === 'Escape') onClose(); };
+        window.addEventListener('keydown', handler);
+        return () => window.removeEventListener('keydown', handler);
+    }, [open, onClose]);
+
+    if (!open || !activity) return null;
+
+    const renderMetadata = (metadata) => {
+        if (!metadata || typeof metadata !== 'object' || Object.keys(metadata).length === 0) {
+            return <div className="text-sm text-[#a6a6a6]">No additional details available.</div>;
+        }
+
+        if (metadata.before && metadata.after) {
+            const keys = Array.from(new Set([...Object.keys(metadata.before), ...Object.keys(metadata.after)]));
+            return (
+                <div className="space-y-4">
+                    <div className="text-sm font-semibold text-[#818181]">Changes applied:</div>
+                    <div className="border border-[#19140015] rounded-xl overflow-hidden">
+                        <table className="w-full text-sm text-left">
+                            <thead className="bg-[#dddddd] text-[#a6a6a6] border-b border-[#19140015]">
+                                <tr>
+                                    <th className="px-4 py-2 font-semibold">Field</th>
+                                    <th className="px-4 py-2 font-semibold">Before</th>
+                                    <th className="px-4 py-2 font-semibold">After</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-[#19140010]">
+                                {keys.map(k => {
+                                    const b = metadata.before[k];
+                                    const a = metadata.after[k];
+                                    const changed = JSON.stringify(b) !== JSON.stringify(a);
+                                    if (!changed) return null; // Only show what changed
+                                    return (
+                                        <tr key={k} className="bg-amber-50/50 hover:bg-amber-100/50">
+                                            <td className="px-4 py-2 font-medium text-[#818181] capitalize">{k.replace(/_/g, ' ')}</td>
+                                            <td className="px-4 py-2 text-[#a6a6a6]">{b !== undefined && b !== null ? String(b) : '-'}</td>
+                                            <td className="px-4 py-2 text-[#818181] font-medium">{a !== undefined && a !== null ? String(a) : '-'}</td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <div className="space-y-4">
+                <div className="text-sm font-semibold text-[#818181]">Details:</div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 bg-[#f8f9fa] p-4 rounded-xl border border-[#cbcbcb]">
+                    {Object.entries(metadata).map(([k, v]) => (
+                        <div key={k} className="space-y-1">
+                            <div className="text-[11px] font-black text-[#a6a6a6] uppercase tracking-wider">{k.replace(/_/g, ' ')}</div>
+                            <div className="text-sm font-semibold text-[#3f3f46] break-all">
+                                {typeof v === 'object' ? JSON.stringify(v) : String(v)}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    };
+
+    return (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm animate-[fadeIn_150ms_ease-out]" onClick={onClose} />
+            <div className="relative w-full max-w-2xl bg-white rounded-2xl border border-[#cbcbcb] shadow-2xl animate-[scaleIn_200ms_ease-out] flex flex-col max-h-[85vh]">
+                <div className="flex items-center justify-between px-6 py-4 border-b border-[#19140015]">
+                    <div>
+                        <h2 className="text-base font-black text-[#3f3f46]">Activity Details</h2>
+                        <p className="text-xs font-semibold text-[#a6a6a6] mt-0.5">{activity.description || activity.event_type}</p>
+                    </div>
+                    <button type="button" onClick={onClose} className="p-2 -mr-2 text-[#a6a6a6] hover:bg-[#dddddd] hover:text-[#818181] rounded-xl transition-colors">
+                        <X size={18} />
+                    </button>
+                </div>
+                <div className="p-6 overflow-y-auto">
+                    {renderMetadata(activity.metadata)}
+                </div>
+            </div>
+        </div>
+    );
+};
 
 const EM_DASH = '\u2014';
 
@@ -18,6 +106,15 @@ const CashierAccounts = () => {
     const [branchesLoading, setBranchesLoading] = React.useState(true);
     const [branchesError, setBranchesError] = React.useState('');
     const [branchesFetchedAt, setBranchesFetchedAt] = React.useState(0);
+
+    const [detailsModalOpen, setDetailsModalOpen] = React.useState(false);
+    const [selectedActivity, setSelectedActivity] = React.useState(null);
+
+    const openActivityDetails = (activity) => {
+        if (!activity?.metadata || Object.keys(activity.metadata).length === 0) return;
+        setSelectedActivity(activity);
+        setDetailsModalOpen(true);
+    };
 
     const [form, setForm] = React.useState({
         id: null,
@@ -416,20 +513,37 @@ const CashierAccounts = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {activities.map((a) => (
-                                    <tr key={a.id} className="border-b border-[#19140010] hover:bg-[#fff7f9]/70">
-                                        <td className="px-6 py-3 text-[#a6a6a6] whitespace-nowrap">
-                                            {a.created_at ? new Date(a.created_at).toLocaleString() : '-'}
-                                        </td>
-                                        <td className="px-6 py-3 text-[#818181] font-medium">
-                                            {a.actor?.name || a.actor_name || EM_DASH}
-                                        </td>
-                                        <td className="px-6 py-3 text-[#a6a6a6]">
-                                            {a.description || a.event_type || EM_DASH}
-                                        </td>
-                                        <td className="px-6 py-3 text-[#a6a6a6]">{a.ip_address || EM_DASH}</td>
-                                    </tr>
-                                ))}
+                                {activities.map((a) => {
+                                    const hasDetails = a.metadata && Object.keys(a.metadata).length > 0;
+                                    return (
+                                        <tr 
+                                            key={a.id} 
+                                            className={`border-b border-[#19140010] hover:bg-[#fff7f9]/70 transition-colors ${hasDetails ? 'cursor-pointer' : ''}`}
+                                            onClick={() => hasDetails && openActivityDetails(a)}
+                                        >
+                                            <td className="px-6 py-3 text-[#a6a6a6] whitespace-nowrap">
+                                                {a.created_at ? new Date(a.created_at).toLocaleString() : '-'}
+                                            </td>
+                                            <td className="px-6 py-3 text-[#818181] font-medium">
+                                                {a.actor?.name || a.actor_name || EM_DASH}
+                                            </td>
+                                            <td className="px-6 py-3 text-[#a6a6a6]">
+                                                <div className="flex flex-col gap-1">
+                                                    <span className={hasDetails ? 'font-semibold text-[#818181]' : ''}>
+                                                        {a.description || a.event_type || EM_DASH}
+                                                    </span>
+                                                    {hasDetails && (
+                                                        <span className="inline-flex items-center gap-1 text-[11px] font-black text-[#d94a79] uppercase tracking-wider group-hover:underline">
+                                                            <Info size={12} />
+                                                            Click to view changes
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-3 text-[#a6a6a6]">{a.ip_address || EM_DASH}</td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>
@@ -443,6 +557,12 @@ const CashierAccounts = () => {
                 confirming={deleteConfirming}
                 title="Delete Cashier Account"
                 itemName={deleteTargetCashier?.name || deleteTargetCashier?.email}
+            />
+
+            <ActivityDetailsModal
+                open={detailsModalOpen}
+                onClose={() => { setDetailsModalOpen(false); setSelectedActivity(null); }}
+                activity={selectedActivity}
             />
         </div>
     );
