@@ -78,6 +78,11 @@ const CashierInventoryManagement = () => {
 
 
 
+    const [settings, setSettings] = React.useState({
+        priceAdjustmentsEnabled: true,
+        customItemsEnabled: true,
+    });
+
     React.useEffect(() => {
         const id = window.setTimeout(() => setDebouncedQ(q.trim()), 250);
         return () => window.clearTimeout(id);
@@ -95,9 +100,10 @@ const CashierInventoryManagement = () => {
             const params = { page, per_page: 10 };
             if (debouncedQ) params.q = debouncedQ;
             if (categoryId && categoryId !== 'all') params.category_id = categoryId;
-            const [itemsRes, catsRes] = await Promise.all([
+            const [itemsRes, catsRes, settingsRes] = await Promise.all([
                 axios.get('/api/inventory', { params }),
                 axios.get('/api/categories'),
+                axios.get('/api/settings')
             ]);
             const rows = Array.isArray(itemsRes.data?.data) ? itemsRes.data.data : Array.isArray(itemsRes.data) ? itemsRes.data : [];
             setItems(rows);
@@ -105,6 +111,10 @@ const CashierInventoryManagement = () => {
             setTotalPages(Number(itemsRes.data?.last_page || 1) || 1);
             setTotalItems(Number(itemsRes.data?.total || rows.length) || 0);
             setCategories(catsRes.data || []);
+            setSettings({
+                priceAdjustmentsEnabled: Boolean(settingsRes.data?.pos_price_adjustments_enabled),
+                customItemsEnabled: Boolean(settingsRes.data?.pos_custom_items_enabled),
+            });
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to load inventory');
         } finally {
@@ -117,6 +127,11 @@ const CashierInventoryManagement = () => {
     }, [fetchData]);
 
     const requestNewCode = React.useCallback(async () => {
+        if (!settings.priceAdjustmentsEnabled && !settings.customItemsEnabled) {
+            alert('Inventory management features are disabled by admin.');
+            return;
+        }
+
         setRequesting(true);
         setAuthError('');
         try {
@@ -145,7 +160,7 @@ const CashierInventoryManagement = () => {
         } finally {
             setRequesting(false);
         }
-    }, []);
+    }, [settings]);
 
     React.useEffect(() => {
         const id = window.setInterval(() => setNowTs(Date.now()), 1000);
@@ -209,6 +224,10 @@ const CashierInventoryManagement = () => {
     };
 
     const openAddItem = () => {
+        if (!settings.customItemsEnabled) {
+            alert('Adding new items is disabled by admin.');
+            return;
+        }
         setEditingItem(null);
         setItemForm({
             category_id: categories[0]?.id ? String(categories[0].id) : '',
@@ -224,6 +243,10 @@ const CashierInventoryManagement = () => {
     };
 
     const openEditItem = (item) => {
+        if (!settings.priceAdjustmentsEnabled) {
+            alert('Editing items (price/stock adjustments) is disabled by admin.');
+            return;
+        }
         setEditingItem(item);
         setItemForm({
             category_id: item.category_id != null ? String(item.category_id) : item.category?.id != null ? String(item.category.id) : '',
@@ -281,6 +304,10 @@ const CashierInventoryManagement = () => {
     const [deleteConfirming, setDeleteConfirming] = React.useState(false);
 
     const requestDeleteItem = (item) => {
+        if (!settings.priceAdjustmentsEnabled) {
+            alert('Deleting items is disabled by admin.');
+            return;
+        }
         setDeleteTarget({ type: 'item', item });
         setDeleteModalOpen(true);
     };
