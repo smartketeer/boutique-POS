@@ -74,6 +74,7 @@ const CashierInventoryManagement = () => {
     const [cameraPhase, setCameraPhase] = React.useState('live');
     const [capturedPreview, setCapturedPreview] = React.useState(null);
     const [facingMode, setFacingMode] = React.useState('environment');
+    const [flashOn, setFlashOn] = React.useState(false);
     // ── end photo modal state ──
 
 
@@ -439,6 +440,7 @@ const CashierInventoryManagement = () => {
             streamRef.current = stream;
             if (videoRef.current) { videoRef.current.srcObject = stream; await videoRef.current.play(); }
             setCameraReady(true);
+            setFlashOn(false);
         } catch (e) {
             if (streamRef.current) { streamRef.current.getTracks().forEach(t => t.stop()); streamRef.current = null; }
             setCameraOpen(false);
@@ -455,6 +457,30 @@ const CashierInventoryManagement = () => {
     const switchCamera = () => {
         const next = facingMode === 'environment' ? 'user' : 'environment';
         setFacingMode(next); startCamera(next);
+    };
+
+    const toggleFlash = async () => {
+        if (!streamRef.current) return;
+        const track = streamRef.current.getVideoTracks()[0];
+        if (!track) return;
+        
+        try {
+            const capabilities = track.getCapabilities();
+            if (!capabilities.torch) {
+                setCameraError('Flash is not supported on this device/camera.');
+                setTimeout(() => setCameraError(''), 3000);
+                return;
+            }
+            
+            const nextFlash = !flashOn;
+            await track.applyConstraints({
+                advanced: [{ torch: nextFlash }]
+            });
+            setFlashOn(nextFlash);
+        } catch (e) {
+            setCameraError('Failed to toggle flash.');
+            setTimeout(() => setCameraError(''), 3000);
+        }
     };
 
     const capturePhoto = () => {
@@ -478,6 +504,10 @@ const CashierInventoryManagement = () => {
             return;
         }
         try {
+            if (facingMode === 'user') {
+                ctx.translate(w, 0);
+                ctx.scale(-1, 1);
+            }
             ctx.drawImage(video, 0, 0, w, h);
         } catch (drawErr) {
             setCameraError('Failed to capture frame: ' + (drawErr?.message || 'Unknown error.'));
@@ -1077,9 +1107,9 @@ const CashierInventoryManagement = () => {
                                     <div style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10, padding: 'calc(env(safe-area-inset-top, 0px) + 16px) 16px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(to bottom,rgba(0,0,0,.65) 0%,transparent 100%)' }}>
                                         <button type="button" onClick={stopCamera} aria-label="Close camera" style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(255,255,255,.15)', border: '1px solid rgba(255,255,255,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', cursor: 'pointer' }}><X size={20} /></button>
                                         <span style={{ color: '#fff', fontWeight: 900, fontSize: 14 }}>Take Product Photo</span>
-                                        <button type="button" aria-label="Flash" style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(255,255,255,.15)', border: '1px solid rgba(255,255,255,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', cursor: 'pointer' }}><Zap size={18} /></button>
+                                        <button type="button" onClick={toggleFlash} aria-label="Flash" style={{ width: 40, height: 40, borderRadius: '50%', background: flashOn ? '#fff' : 'rgba(255,255,255,.15)', border: '1px solid rgba(255,255,255,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: flashOn ? '#1f2937' : '#fff', cursor: 'pointer', transition: 'all 0.2s' }}><Zap size={18} /></button>
                                     </div>
-                                    <video ref={videoRef} autoPlay playsInline muted style={{ flex: 1, width: '100%', objectFit: 'cover' }} />
+                                    <video ref={videoRef} autoPlay playsInline muted style={{ flex: 1, width: '100%', objectFit: 'cover', transform: facingMode === 'user' ? 'scaleX(-1)' : 'none' }} />
                                     {!cameraReady && <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Loader2 size={36} color="#fff" className="animate-spin" /></div>}
                                     {cameraError && <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: 'rgba(0,0,0,.85)', borderRadius: 16, padding: '20px 24px', maxWidth: 320, textAlign: 'center' }}><p style={{ color: '#fca5a5', fontWeight: 700 }}>{cameraError}</p><button type="button" onClick={stopCamera} style={{ marginTop: 12, padding: '8px 20px', borderRadius: 8, background: '#fff', fontWeight: 700, cursor: 'pointer' }}>Close</button></div>}
                                     <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 10, padding: '32px 24px calc(env(safe-area-inset-bottom, 0px) + 32px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'linear-gradient(to top,rgba(0,0,0,.7) 0%,transparent 100%)' }}>

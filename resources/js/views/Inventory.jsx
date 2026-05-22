@@ -41,6 +41,7 @@ const Inventory = () => {
     const [cameraReady, setCameraReady] = useState(false);
     const [facingMode, setFacingMode] = useState('environment');
     const [capturedPreview, setCapturedPreview] = useState(null); // { url, file }
+    const [flashOn, setFlashOn] = useState(false);
 
     const searchInputRef = useRef(null);
     const fileInputRef = useRef(null);
@@ -321,6 +322,30 @@ const Inventory = () => {
         startCamera(next);
     };
 
+    const toggleFlash = async () => {
+        if (!streamRef.current) return;
+        const track = streamRef.current.getVideoTracks()[0];
+        if (!track) return;
+        
+        try {
+            const capabilities = track.getCapabilities();
+            if (!capabilities.torch) {
+                setCameraError('Flash is not supported on this device/camera.');
+                setTimeout(() => setCameraError(''), 3000);
+                return;
+            }
+            
+            const nextFlash = !flashOn;
+            await track.applyConstraints({
+                advanced: [{ torch: nextFlash }]
+            });
+            setFlashOn(nextFlash);
+        } catch (e) {
+            setCameraError('Failed to toggle flash.');
+            setTimeout(() => setCameraError(''), 3000);
+        }
+    };
+
     const capturePhoto = async () => {
         if (!videoRef.current || !cameraReady) {
             setCameraError('Camera is not ready. Please wait and try again.');
@@ -339,6 +364,10 @@ const Inventory = () => {
         const ctx = canvas.getContext('2d');
         if (!ctx) { setCameraError('Canvas not supported by your browser.'); return; }
         try {
+            if (facingMode === 'user') {
+                ctx.translate(w, 0);
+                ctx.scale(-1, 1);
+            }
             ctx.drawImage(video, 0, 0, w, h);
         } catch (drawErr) {
             setCameraError('Failed to capture frame: ' + (drawErr?.message || 'Unknown error.'));
@@ -1373,11 +1402,11 @@ const Inventory = () => {
                                             <X size={20} />
                                         </button>
                                         <span style={{ color: '#fff', fontWeight: 900, fontSize: 14, letterSpacing: '0.05em', textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>Take Product Photo</span>
-                                        {/* Flash placeholder */}
                                         <button
                                             type="button"
-                                            aria-label="Flash (placeholder)"
-                                            style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', backdropFilter: 'blur(8px)', cursor: 'pointer' }}
+                                            onClick={toggleFlash}
+                                            aria-label="Flash"
+                                            style={{ width: 40, height: 40, borderRadius: '50%', background: flashOn ? '#fff' : 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: flashOn ? '#1f2937' : '#fff', backdropFilter: 'blur(8px)', cursor: 'pointer', transition: 'all 0.2s' }}
                                         >
                                             <Zap size={18} />
                                         </button>
@@ -1389,7 +1418,7 @@ const Inventory = () => {
                                         autoPlay
                                         playsInline
                                         muted
-                                        style={{ flex: 1, width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                                        style={{ flex: 1, width: '100%', height: '100%', objectFit: 'cover', display: 'block', transform: facingMode === 'user' ? 'scaleX(-1)' : 'none' }}
                                     />
 
                                     {/* Loading overlay */}
