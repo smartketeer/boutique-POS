@@ -23,24 +23,29 @@ const ConfirmDeleteModal = ({
     message,
     itemName,
     confirming = false,
+    requireCountdown = true,
 }) => {
-    const [countdown, setCountdown] = React.useState(COUNTDOWN_SECONDS);
+    const [countdown, setCountdown] = React.useState(requireCountdown ? COUNTDOWN_SECONDS : 0);
     const intervalRef = React.useRef(null);
 
     // Reset & start countdown each time the modal opens
     React.useEffect(() => {
         if (open) {
-            setCountdown(COUNTDOWN_SECONDS);
-            intervalRef.current = setInterval(() => {
-                setCountdown((prev) => {
-                    if (prev <= 1) {
-                        clearInterval(intervalRef.current);
-                        intervalRef.current = null;
-                        return 0;
-                    }
-                    return prev - 1;
-                });
-            }, 1000);
+            if (requireCountdown) {
+                setCountdown(COUNTDOWN_SECONDS);
+                intervalRef.current = setInterval(() => {
+                    setCountdown((prev) => {
+                        if (prev <= 1) {
+                            clearInterval(intervalRef.current);
+                            intervalRef.current = null;
+                            return 0;
+                        }
+                        return prev - 1;
+                    });
+                }, 1000);
+            } else {
+                setCountdown(0);
+            }
         } else {
             if (intervalRef.current) {
                 clearInterval(intervalRef.current);
@@ -53,7 +58,7 @@ const ConfirmDeleteModal = ({
                 intervalRef.current = null;
             }
         };
-    }, [open]);
+    }, [open, requireCountdown]);
 
     // Close on Escape key
     React.useEffect(() => {

@@ -1519,6 +1519,7 @@ const Inventory = () => {
                 onClose={() => { setDeleteImgModalOpen(false); setDeleteImgId(null); }}
                 onConfirm={executeDeleteImage}
                 confirming={deleteImgConfirming}
+                requireCountdown={false}
                 title="Delete Image"
                 message="Are you sure you want to permanently delete this image? This action cannot be undone."
             />

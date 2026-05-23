@@ -1141,6 +1141,7 @@ const CashierInventoryManagement = () => {
                 onClose={() => { setDeleteModalOpen(false); setDeleteTarget(null); }}
                 onConfirm={executeDelete}
                 confirming={deleteConfirming}
+                requireCountdown={deleteTarget?.type !== 'image'}
                 title={deleteTarget?.type === 'image' ? 'Delete Image' : 'Delete Item'}
                 itemName={deleteTarget?.type === 'item' ? deleteTarget.item?.name : undefined}
                 message={deleteTarget?.type === 'image' ? 'Are you sure you want to permanently delete this image? This action cannot be undone.' : undefined}
