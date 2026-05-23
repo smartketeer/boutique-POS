@@ -743,7 +743,7 @@ const POSTerminal = () => {
     );
 
     return (
-        <div className="relative font-sans text-[#818181]">
+        <div className="relative font-sans text-[#818181] print:hidden">
             {stockNotice ? (
                 <div className="fixed z-[90] top-6 left-1/2 -translate-x-1/2 w-[min(520px,calc(100vw-32px))] animate-in slide-in-from-top-4 fade-in duration-300">
                     <div className="rounded-2xl border border-[#cbcbcb] bg-white p-4 shadow-2xl flex items-center gap-4">
@@ -1356,15 +1356,15 @@ const POSTerminal = () => {
                     <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
                         <button
                             type="button"
-                            className="fixed inset-0 bg-[#818181]/40 backdrop-blur-md"
+                            className="fixed inset-0 bg-[#818181]/40 backdrop-blur-md print:hidden"
                             onClick={() => setIsReceiptModalOpen(false)}
                             aria-label="Close receipt modal"
                         />
                     </Transition.Child>
-                    <div className="fixed inset-0 overflow-y-auto">
-                        <div className="flex min-h-full items-center justify-center p-4">
+                    <div className="fixed inset-0 overflow-y-auto print:static print:inset-auto print:overflow-visible">
+                        <div className="flex min-h-full items-center justify-center p-4 print:p-0 print:block print:min-h-0">
                             <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
-                                <Dialog.Panel className="w-full max-w-sm transform overflow-hidden rounded-3xl bg-white p-8 shadow-2xl transition-all border border-zinc-100">
+                                <Dialog.Panel className="w-full max-w-sm transform overflow-hidden rounded-3xl bg-white p-8 shadow-2xl transition-all border border-zinc-100 print:shadow-none print:border-none print:rounded-none print:p-0 print:max-w-none print:w-auto">
                                     <div className="text-center mb-6">
                                         <div className="flex items-center justify-center gap-3 mb-2">
                                             <div className="w-12 h-12 rounded-xl bg-[#dddddd] border border-zinc-100 p-1 flex items-center justify-center shadow-sm">
@@ -1478,7 +1478,7 @@ const POSTerminal = () => {
 
                                     <div className="text-center space-y-4">
                                         <p className="text-[11px] font-semibold text-[#cbcbcb] uppercase tracking-widest">Thank you for your visit!</p>
-                                        <div className="flex gap-3">
+                                        <div className="flex gap-3 print:hidden">
                                             <button 
                                                 onClick={() => window.print()}
                                                 className="flex-1 py-4 border-2 border-[#cbcbcb] text-[#a6a6a6] rounded-2xl font-semibold text-[12px] uppercase tracking-wider hover:bg-[#dddddd] hover:border-[#a6a6a6] transition-all shadow-sm"
