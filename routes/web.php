@@ -4,11 +4,20 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
 Route::get('/setup-storage', function () {
+    $target = storage_path('app/public');
+    $link = public_path('storage');
+
+    if (file_exists($link)) {
+        return 'Storage link already exists at ' . $link;
+    }
+
     try {
-        Artisan::call('storage:link');
-        return 'Storage link created successfully!';
+        if (symlink($target, $link)) {
+            return 'Storage link created successfully using native symlink()!';
+        }
+        return 'Failed to create symlink (function returned false).';
     } catch (\Exception $e) {
-        return 'Error: ' . $e->getMessage();
+        return 'Error creating symlink: ' . $e->getMessage();
     }
 });
 

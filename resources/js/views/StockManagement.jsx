@@ -48,6 +48,7 @@ const StockManagement = () => {
         sku: '',
         price: '',
         cost: '',
+        stock: '',
         is_service: false,
     });
     const [newCategory, setNewCategory] = useState({
@@ -200,11 +201,12 @@ const StockManagement = () => {
                 sku: newItem.sku ? String(newItem.sku) : null,
                 price: Number(newItem.price || 0),
                 cost: Number(newItem.cost || 0),
+                stock: newItem.stock !== '' ? Number(newItem.stock) : null,
                 is_service: Boolean(newItem.is_service),
                 branch_id: Number(branchId),
             });
             setIsAddItemOpen(false);
-            setNewItem({ name: '', category_id: '', sku: '', price: '', cost: '', is_service: false });
+            setNewItem({ name: '', category_id: '', sku: '', price: '', cost: '', stock: '', is_service: false });
             await loadCatalog(branchId);
             if (res.data?.id != null) setSelectedItemId(String(res.data.id));
         } catch (err) {
@@ -227,15 +229,11 @@ const StockManagement = () => {
     const tabConfig = [
         { key: 'receipt', label: 'Stock In', icon: ArrowDownCircle, helper: 'Record stocks bought or received from supplier.' },
         { key: 'issue', label: 'Stock Out', icon: ArrowUpCircle, helper: 'Record stock used, transferred, or dispatched.' },
-        { key: 'adjustment', label: 'Adjust', icon: Edit3, helper: 'Correct stock levels to match the actual count.' },
-        { key: 'sales', label: 'Sales', icon: ShoppingBag, helper: 'View stock deducted by sales.' },
     ];
 
-    const entryTitle =
-        tab === 'receipt' ? 'Add Stock In' : tab === 'issue' ? 'Add Stock Out' : tab === 'adjustment' ? 'Adjust Stock' : 'Sales Tracking';
+    const entryTitle = tab === 'receipt' ? 'Add Stock In' : 'Add Stock Out';
 
-    const qtyLabel =
-        tab === 'receipt' ? 'Quantity received' : tab === 'issue' ? 'Quantity issued' : 'Set stock to';
+    const qtyLabel = tab === 'receipt' ? 'Quantity received' : 'Quantity issued';
 
     const canEdit = tab !== 'sales';
 
@@ -682,6 +680,17 @@ const StockManagement = () => {
                                                     className="w-full px-4 py-2 border border-[#19140035] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#818181]/10 text-sm font-medium"
                                                 />
                                             </div>
+                                            {!newItem.is_service && (
+                                                <div className="col-span-2">
+                                                    <label className="block text-xs font-semibold text-[#a6a6a6] uppercase tracking-widest mb-1">Initial Stocks</label>
+                                                    <input
+                                                        type="number"
+                                                        value={newItem.stock}
+                                                        onChange={(e) => setNewItem({ ...newItem, stock: e.target.value })}
+                                                        className="w-full px-4 py-2 border border-[#19140035] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#818181]/10 text-sm font-medium"
+                                                    />
+                                                </div>
+                                            )}
                                         </div>
                                         <div className="pt-4">
                                             <button type="submit" className="w-full py-3 bg-[#818181] text-white rounded-xl font-semibold text-sm uppercase tracking-widest hover:bg-[#2c2c2a] transition-all shadow-lg shadow-[#81818120]">

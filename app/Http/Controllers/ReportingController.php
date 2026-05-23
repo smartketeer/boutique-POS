@@ -53,6 +53,12 @@ class ReportingController extends Controller
                 return;
             }
 
+            if ($range === 'year') {
+                $query->whereYear('created_at', $now->year);
+
+                return;
+            }
+
             $query
                 ->whereYear('created_at', $now->year)
                 ->whereMonth('created_at', $now->month);
@@ -117,6 +123,38 @@ class ReportingController extends Controller
         $series = [];
         for ($d = $start->copy(); $d->lte($end); $d->addMonth()) {
             $key = $d->copy()->startOfMonth()->toDateString();
+            $row = $rows->get($key);
+            $series[] = [
+                'date' => $key,
+                'total_revenue' => $row ? (float) $row->total_revenue : 0.0,
+                'total_transactions' => $row ? (int) $row->total_transactions : 0,
+            ];
+        }
+
+        return response()->json([
+            'start_date' => $start->toDateString(),
+            'end_date' => $end->toDateString(),
+            'days' => $series,
+        ]);
+    }
+
+    public function yearlyRevenue()
+    {
+        $end = Carbon::today()->endOfYear()->endOfDay();
+        $start = Carbon::today()->subYears(4)->startOfYear()->startOfDay();
+
+        $rows = Sale::query()
+            ->selectRaw("DATE_FORMAT(created_at, '%Y-01-01') as date, SUM(total_amount) as total_revenue, COUNT(*) as total_transactions")
+            ->where('status', 'completed')
+            ->whereBetween('created_at', [$start, $end])
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->keyBy('date');
+
+        $series = [];
+        for ($d = $start->copy(); $d->lte($end); $d->addYear()) {
+            $key = $d->copy()->startOfYear()->toDateString();
             $row = $rows->get($key);
             $series[] = [
                 'date' => $key,

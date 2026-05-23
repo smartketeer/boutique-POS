@@ -112,6 +112,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/reports/daily-summary', [ReportingController::class, 'dailySummary']);
         Route::get('/reports/weekly-revenue', [ReportingController::class, 'weeklyRevenue']);
         Route::get('/reports/monthly-revenue', [ReportingController::class, 'monthlyRevenue']);
+        Route::get('/reports/yearly-revenue', [ReportingController::class, 'yearlyRevenue']);
         Route::get('/reports/staff-performance', [ReportingController::class, 'staffPerformance']);
         Route::get('/reports/inventory-valuation', [ReportingController::class, 'inventoryValuation']);
     });

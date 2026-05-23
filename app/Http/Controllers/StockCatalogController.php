@@ -21,12 +21,14 @@ class StockCatalogController extends Controller
             'cost' => 'required|numeric|min:0',
             'is_service' => 'required|boolean',
             'branch_id' => 'required|integer|exists:branches,id',
+            'stock' => 'nullable|numeric|min:0',
         ]);
 
         return DB::transaction(function () use ($request, $validated) {
             $branchId = (int) $validated['branch_id'];
             $requestedIsService = (bool) $validated['is_service'];
             $sku = trim((string) ($validated['sku'] ?? ''));
+            $initialStock = isset($validated['stock']) ? (int) $validated['stock'] : 0;
 
             $existing = null;
             if ($sku !== '') {
@@ -52,13 +54,13 @@ class StockCatalogController extends Controller
                     ->lockForUpdate()
                     ->firstOrCreate(
                         ['branch_id' => $branchId, 'item_id' => $existing->id],
-                        ['quantity' => 0],
+                        ['quantity' => $initialStock],
                     );
 
                 ActivityLog::create([
                     'actor_user_id' => $request->user()?->id,
                     'event_type' => 'catalog_item_attached_to_branch',
-                    'description' => 'Attached an existing catalog item to a branch with zero starting stock.',
+                    'description' => 'Attached an existing catalog item to a branch with initial stock.',
                     'metadata' => [
                         'branch_id' => $branchId,
                         'item_id' => $existing->id,
@@ -79,20 +81,20 @@ class StockCatalogController extends Controller
                 'sku' => $sku !== '' ? $sku : null,
                 'price' => (float) $validated['price'],
                 'cost' => (float) $validated['cost'],
-                'stock_qty' => 0,
+                'stock_qty' => $initialStock,
                 'is_service' => $requestedIsService,
             ]);
 
             BranchItemStock::query()->create([
                 'branch_id' => $branchId,
                 'item_id' => $item->id,
-                'quantity' => 0,
+                'quantity' => $initialStock,
             ]);
 
             ActivityLog::create([
                 'actor_user_id' => $request->user()?->id,
                 'event_type' => 'catalog_item_created',
-                'description' => 'Created a catalog item with zero starting stock.',
+                'description' => 'Created a catalog item with initial stock.',
                 'metadata' => [
                     'branch_id' => $branchId,
                     'item_id' => $item->id,

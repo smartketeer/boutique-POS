@@ -410,6 +410,14 @@ class SalesController extends Controller
             $query->whereDate('created_at', $date);
         }
 
+        if ($startDate = request()->query('start_date')) {
+            $query->whereDate('created_at', '>=', $startDate);
+        }
+
+        if ($endDate = request()->query('end_date')) {
+            $query->whereDate('created_at', '<=', $endDate);
+        }
+
         if ($payment = request()->query('payment_method')) {
             $query->where('payment_method', $payment);
         }

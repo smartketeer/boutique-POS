@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment, useMemo } from 'react';
 import axios from 'axios';
-import { BarChart, TrendingUp, Users, Package, ArrowUpRight, ArrowDownRight, Printer, Download, Filter } from 'lucide-react';
+import { BarChart, TrendingUp, Users, Package, ArrowUpRight, ArrowDownRight, Printer, Download, Filter, X } from 'lucide-react';
+import { Dialog, Transition } from '@headlessui/react';
 import { useAuthStore } from '../store/authStore';
 
 const PESO = '\u20B1';
@@ -22,6 +23,11 @@ const Reports = () => {
     const [revenueLoading, setRevenueLoading] = useState(true);
     const [error, setError] = useState('');
 
+    const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
+    const [printPeriod, setPrintPeriod] = useState('daily');
+    const [salesDataForPrint, setSalesDataForPrint] = useState(null);
+    const [isFetchingPrintData, setIsFetchingPrintData] = useState(false);
+
     const isAdmin = user?.role === 'admin';
 
     const toNumber = (value) => {
@@ -33,8 +39,8 @@ const Reports = () => {
         toNumber(value).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
     const staffRangeLabel =
-        staffRange === 'today' ? 'Today' : staffRange === 'week' ? 'Weekly' : 'Monthly';
-    const revenueRangeLabel = revenueRange === 'month' ? 'Monthly' : 'Weekly';
+        staffRange === 'today' ? 'Today' : staffRange === 'week' ? 'Weekly' : staffRange === 'month' ? 'Monthly' : 'Yearly';
+    const revenueRangeLabel = revenueRange === 'month' ? 'Monthly' : revenueRange === 'year' ? 'Yearly' : 'Weekly';
 
     useEffect(() => {
         if (!isAdmin) return;
@@ -71,7 +77,7 @@ const Reports = () => {
             setRevenueLoading(true);
             setError('');
             try {
-                const revenueUrl = revenueRange === 'month' ? '/api/reports/monthly-revenue' : '/api/reports/weekly-revenue';
+                const revenueUrl = revenueRange === 'year' ? '/api/reports/yearly-revenue' : revenueRange === 'month' ? '/api/reports/monthly-revenue' : '/api/reports/weekly-revenue';
                 const res = await axios.get(revenueUrl);
                 if (!cancelled) setRevenueTrend(res.data);
             } catch (err) {
@@ -107,7 +113,78 @@ const Reports = () => {
         };
     }, [isAdmin, staffRange]);
 
-    const handlePrint = () => window.print();
+    const handlePrintClick = () => {
+        setIsPrintModalOpen(true);
+    };
+
+    const executePrint = async () => {
+        setIsFetchingPrintData(true);
+        try {
+            const today = new Date();
+            let startDate, endDate;
+            if (printPeriod === 'daily') {
+                startDate = today.toISOString().split('T')[0];
+                endDate = startDate;
+            } else if (printPeriod === 'weekly') {
+                const start = new Date(today);
+                start.setDate(today.getDate() - 6);
+                startDate = start.toISOString().split('T')[0];
+                endDate = today.toISOString().split('T')[0];
+            } else if (printPeriod === 'monthly') {
+                const start = new Date(today);
+                start.setMonth(today.getMonth() - 1);
+                startDate = start.toISOString().split('T')[0];
+                endDate = today.toISOString().split('T')[0];
+            } else if (printPeriod === 'yearly') {
+                const start = new Date(today);
+                start.setFullYear(today.getFullYear() - 1);
+                startDate = start.toISOString().split('T')[0];
+                endDate = today.toISOString().split('T')[0];
+            }
+
+            const res = await axios.get(`/api/sales?start_date=${startDate}&end_date=${endDate}`);
+            setSalesDataForPrint(res.data);
+            setIsPrintModalOpen(false);
+            setTimeout(() => {
+                window.print();
+            }, 500);
+        } catch (err) {
+            setError('Failed to fetch sales data for printing.');
+            setIsPrintModalOpen(false);
+        } finally {
+            setIsFetchingPrintData(false);
+        }
+    };
+
+    const printSalesItems = useMemo(() => {
+        if (!salesDataForPrint) return [];
+        const items = [];
+        salesDataForPrint.forEach((sale) => {
+            const date = new Date(sale.created_at).toLocaleDateString();
+            const cashier = sale.staff?.name || 'Unknown';
+            sale.sale_items?.forEach((si) => {
+                items.push({
+                    date,
+                    productName: si.item?.name || 'Unknown Item',
+                    quantity: si.quantity,
+                    unitPrice: si.price_at_time,
+                    totalSales: si.quantity * si.price_at_time,
+                    cashier,
+                });
+            });
+            sale.custom_items?.forEach((ci) => {
+                items.push({
+                    date,
+                    productName: ci.name || 'Custom Item',
+                    quantity: ci.quantity,
+                    unitPrice: ci.price,
+                    totalSales: ci.quantity * ci.price,
+                    cashier,
+                });
+            });
+        });
+        return items;
+    }, [salesDataForPrint]);
 
     const handleExportCsv = () => {
         const escape = (v) => {
@@ -155,7 +232,7 @@ const Reports = () => {
     };
 
     const toggleStaffRange = () => {
-        setStaffRange((prev) => (prev === 'month' ? 'week' : prev === 'week' ? 'today' : 'month'));
+        setStaffRange((prev) => (prev === 'year' ? 'month' : prev === 'month' ? 'week' : prev === 'week' ? 'today' : 'year'));
     };
 
     if (!isAdmin) {
@@ -163,15 +240,16 @@ const Reports = () => {
     }
 
     return (
-        <div className="space-y-8 max-w-7xl mx-auto pb-12">
-            <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div className="space-y-1">
-                    <h1 className="text-3xl font-semibold text-[#818181] tracking-tight">Admin Management Suite</h1>
-                    <p className="text-[#a6a6a6] font-medium">Comprehensive business analytics and staff performance metrics.</p>
-                </div>
-                <div className="flex gap-3">
-                    <button
-                        onClick={handlePrint}
+        <Fragment>
+            <div className="space-y-8 max-w-7xl mx-auto pb-12 print:hidden">
+                <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div className="space-y-1">
+                        <h1 className="text-3xl font-semibold text-[#818181] tracking-tight">Admin Management Suite</h1>
+                        <p className="text-[#a6a6a6] font-medium">Comprehensive business analytics and staff performance metrics.</p>
+                    </div>
+                    <div className="flex gap-3">
+                        <button
+                            onClick={handlePrintClick}
                         className="flex items-center gap-2 px-5 py-2.5 bg-white border border-[#cbcbcb] text-[#818181] rounded-xl hover:bg-[#dddddd] transition-all font-medium text-sm shadow-sm"
                     >
                         <Printer size={18} /> Print Report
@@ -294,6 +372,15 @@ const Reports = () => {
                                 }`}
                             >
                                 Monthly
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setRevenueRange('year')}
+                                className={`h-8 px-3 rounded-xl text-[11px] font-semibold uppercase tracking-widest transition-all ${
+                                    revenueRange === 'year' ? 'bg-[#818181] text-white' : 'text-[#a6a6a6] hover:text-[#818181] hover:bg-[#fff7f9]'
+                                }`}
+                            >
+                                Yearly
                             </button>
                         </div>
                     </header>
@@ -473,6 +560,109 @@ const Reports = () => {
                 </div>
             </div>
         </div>
+
+        {/* Print Modal */}
+            <Transition appear show={isPrintModalOpen} as={Fragment}>
+                <Dialog as="div" className="relative z-50 print:hidden" onClose={() => setIsPrintModalOpen(false)}>
+                    <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
+                        <div className="fixed inset-0 bg-[#818181]/20 backdrop-blur-sm" />
+                    </Transition.Child>
+                    <div className="fixed inset-0 overflow-y-auto">
+                        <div className="flex min-h-full items-center justify-center p-4">
+                            <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
+                                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-8 shadow-2xl transition-all border border-[#19140015]">
+                                    <div className="flex items-center justify-between mb-6">
+                                        <Dialog.Title as="h3" className="text-xl font-semibold text-[#818181] tracking-tight">
+                                            Print Sales Report
+                                        </Dialog.Title>
+                                        <button onClick={() => setIsPrintModalOpen(false)} className="text-[#a6a6a6] hover:text-[#818181] transition-colors">
+                                            <X size={20} />
+                                        </button>
+                                    </div>
+                                    <div className="space-y-4">
+                                        <div>
+                                            <label className="block text-xs font-semibold text-[#a6a6a6] uppercase tracking-widest mb-1">Select Period</label>
+                                            <select
+                                                value={printPeriod}
+                                                onChange={(e) => setPrintPeriod(e.target.value)}
+                                                className="w-full px-4 py-2 border border-[#19140035] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#818181]/10 text-sm font-medium"
+                                            >
+                                                <option value="daily">Daily</option>
+                                                <option value="weekly">Weekly</option>
+                                                <option value="monthly">Monthly</option>
+                                                <option value="yearly">Yearly</option>
+                                            </select>
+                                        </div>
+                                        <div className="pt-4">
+                                            <button
+                                                onClick={executePrint}
+                                                disabled={isFetchingPrintData}
+                                                className="w-full py-3 bg-[#818181] text-white rounded-xl font-semibold text-sm uppercase tracking-widest hover:bg-[#2c2c2a] transition-all shadow-lg shadow-[#81818120] disabled:opacity-50"
+                                            >
+                                                {isFetchingPrintData ? 'Preparing...' : 'Generate & Print'}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </Dialog.Panel>
+                            </Transition.Child>
+                        </div>
+                    </div>
+                </Dialog>
+            </Transition>
+
+            {/* Printable Report Container */}
+            {salesDataForPrint && (
+                <div className="hidden print:block text-black p-8 bg-white min-h-screen">
+                    <div className="text-center mb-8">
+                        <h1 className="text-3xl font-bold uppercase tracking-widest text-[#42b883]">{printPeriod} Sales Report</h1>
+                        <p className="text-sm font-medium text-gray-500 mt-2">Generated on {new Date().toLocaleDateString()}</p>
+                    </div>
+                    <table className="w-full border-collapse border border-gray-300 text-sm">
+                        <thead className="bg-[#42b883] text-white">
+                            <tr>
+                                <th className="border border-gray-300 px-4 py-2 font-semibold">Date</th>
+                                <th className="border border-gray-300 px-4 py-2 font-semibold">Product Name</th>
+                                <th className="border border-gray-300 px-4 py-2 font-semibold">Quantity Sold</th>
+                                <th className="border border-gray-300 px-4 py-2 font-semibold text-right">Unit Price ({PESO})</th>
+                                <th className="border border-gray-300 px-4 py-2 font-semibold text-right">Total Sales ({PESO})</th>
+                                <th className="border border-gray-300 px-4 py-2 font-semibold">Cashier</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {printSalesItems.length > 0 ? (
+                                printSalesItems.map((item, idx) => (
+                                    <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                        <td className="border border-gray-300 px-4 py-2 text-center">{item.date}</td>
+                                        <td className="border border-gray-300 px-4 py-2">{item.productName}</td>
+                                        <td className="border border-gray-300 px-4 py-2 text-center">{item.quantity}</td>
+                                        <td className="border border-gray-300 px-4 py-2 text-right">{formatPeso(item.unitPrice)}</td>
+                                        <td className="border border-gray-300 px-4 py-2 text-right">{formatPeso(item.totalSales)}</td>
+                                        <td className="border border-gray-300 px-4 py-2 text-center">{item.cashier}</td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="6" className="border border-gray-300 px-4 py-4 text-center font-medium text-gray-500">
+                                        No sales data found for the selected period.
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                        {printSalesItems.length > 0 && (
+                            <tfoot>
+                                <tr className="bg-gray-100 font-bold">
+                                    <td colSpan="4" className="border border-gray-300 px-4 py-2 text-right">Grand Total</td>
+                                    <td className="border border-gray-300 px-4 py-2 text-right">
+                                        {formatPeso(printSalesItems.reduce((acc, curr) => acc + curr.totalSales, 0))}
+                                    </td>
+                                    <td className="border border-gray-300 px-4 py-2"></td>
+                                </tr>
+                            </tfoot>
+                        )}
+                    </table>
+                </div>
+            )}
+        </Fragment>
     );
 };
 
