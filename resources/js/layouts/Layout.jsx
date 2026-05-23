@@ -199,8 +199,8 @@ const Layout = () => {
         }, [location.pathname, navigate]);
 
         return (
-            <div className="min-h-screen bg-[#dddddd] text-[#818181] font-sans selection:bg-[#18181b] selection:text-white">
-                <header className="sticky top-0 z-40 bg-white border-b border-[#cbcbcb] shadow-sm">
+            <div className="min-h-screen bg-[#dddddd] text-[#818181] font-sans selection:bg-[#18181b] selection:text-white print:bg-transparent print:min-h-0">
+                <header className="sticky top-0 z-40 bg-white border-b border-[#cbcbcb] shadow-sm print:hidden">
                     <div className="max-w-[1600px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
                         {/* Brand */}
                         <div className="flex items-center gap-4">
@@ -285,12 +285,12 @@ const Layout = () => {
                     </div>
                 </header>
 
-                <main className="max-w-[1600px] mx-auto px-4 sm:px-6 py-6 sm:py-8">
+                <main className="max-w-[1600px] mx-auto px-4 sm:px-6 py-6 sm:py-8 print:hidden">
                     <Outlet />
                 </main>
 
                 <div
-                    className={`fixed top-20 right-4 z-[100] transition-all duration-200 ${
+                    className={`fixed top-20 right-4 z-[100] transition-all duration-200 print:hidden ${
                         toast.open ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
                     }`}
                     role="status"
