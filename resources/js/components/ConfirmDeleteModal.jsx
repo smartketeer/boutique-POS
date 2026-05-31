@@ -180,7 +180,11 @@ const ConfirmDeleteModal = ({
                     </button>
                     <button
                         type="button"
-                        onClick={() => canConfirm && onConfirm?.()}
+                        onClick={() => {
+                            if (canConfirm && onConfirm) {
+                                onConfirm();
+                            }
+                        }}
                         disabled={!canConfirm}
                         className={`h-10 px-5 rounded-xl text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
                             canConfirm
