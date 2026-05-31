@@ -682,10 +682,11 @@ const Inventory = () => {
             setDeleteImgModalOpen(false);
             setDeleteImgId(null);
         } catch (e) {
-            const msg = e?.response?.data?.message || 'Failed to delete image.';
-            setImagesError(String(msg));
+            // Keep the delete modal closed but surface the error in the images panel
+            const msg = e?.response?.data?.message || 'Failed to delete image. Please try again.';
             setDeleteImgModalOpen(false);
             setDeleteImgId(null);
+            setImagesError(String(msg));
         } finally {
             setDeleteImgConfirming(false);
         }

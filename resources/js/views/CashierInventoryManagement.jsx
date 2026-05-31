@@ -265,6 +265,20 @@ const CashierInventoryManagement = () => {
     const handleSaveItem = async (e) => {
         e.preventDefault();
         setError('');
+
+        // Frontend validation: adjustment_reason required when stock qty changes
+        if (editingItem) {
+            const originalStock = editingItem.stock_qty != null ? Number(editingItem.stock_qty) : 0;
+            const newStock = Number(itemForm.stock_qty || 0);
+            if (!editingItem.is_service && newStock !== originalStock) {
+                const reason = (itemForm.adjustment_reason || '').trim();
+                if (!reason) {
+                    setError('An adjustment reason is required when modifying the stock quantity.');
+                    return;
+                }
+            }
+        }
+
         try {
             const payload = {
                 category_id: Number(itemForm.category_id),
@@ -288,11 +302,17 @@ const CashierInventoryManagement = () => {
             setEditingItem(null);
             await fetchData();
         } catch (err) {
-            const msg = err.response?.data?.message || 'Save failed';
+            const msg = err.response?.data?.message
+                || err.response?.data?.errors?.adjustment_reason?.[0]
+                || 'Save failed';
             if (err.response?.status === 403) {
                 await clearAccess();
                 setAuthError(msg);
                 setIsAuthModalOpen(true);
+                return;
+            }
+            if (err.response?.status === 422 && err.response?.data?.errors?.adjustment_reason) {
+                setError(err.response.data.errors.adjustment_reason[0]);
                 return;
             }
             setError(msg);
@@ -347,6 +367,7 @@ const CashierInventoryManagement = () => {
                 setDeleteTarget(null);
                 setError(msg);
             } else {
+                // Image delete failed — close delete modal but keep photo modal open with error
                 setDeleteModalOpen(false);
                 setDeleteTarget(null);
                 setImagesError(msg);
@@ -953,12 +974,32 @@ const CashierInventoryManagement = () => {
                                         </div>
                                         {editingItem ? (
                                             <div>
-                                                <label className="block text-xs font-semibold text-[#a6a6a6] mb-1">Adjustment Reason</label>
+                                                <label className="block text-xs font-semibold text-[#a6a6a6] mb-1">
+                                                    Adjustment Reason
+                                                    {(() => {
+                                                        const originalStock = editingItem.stock_qty != null ? Number(editingItem.stock_qty) : 0;
+                                                        const newStock = Number(itemForm.stock_qty || 0);
+                                                        return (!editingItem.is_service && newStock !== originalStock)
+                                                            ? <span className="text-red-500 ml-1">* Required</span>
+                                                            : <span className="text-[#cbcbcb] ml-1">(Optional)</span>;
+                                                    })()}
+                                                </label>
                                                 <input
                                                     value={itemForm.adjustment_reason}
                                                     onChange={(e) => setItemForm((f) => ({ ...f, adjustment_reason: e.target.value }))}
                                                     className="w-full px-3 py-2 border border-[#cbcbcb] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#818181]/20 focus:border-[#818181] bg-white text-[#818181] font-medium transition-all"
-                                                    placeholder="Optional"
+                                                    placeholder={(() => {
+                                                        const originalStock = editingItem.stock_qty != null ? Number(editingItem.stock_qty) : 0;
+                                                        const newStock = Number(itemForm.stock_qty || 0);
+                                                        return (!editingItem.is_service && newStock !== originalStock)
+                                                            ? 'Required when stock quantity changes'
+                                                            : 'e.g. Price correction, restocking...';
+                                                    })()}
+                                                    required={(() => {
+                                                        const originalStock = editingItem.stock_qty != null ? Number(editingItem.stock_qty) : 0;
+                                                        const newStock = Number(itemForm.stock_qty || 0);
+                                                        return !editingItem.is_service && newStock !== originalStock;
+                                                    })()}
                                                 />
                                             </div>
                                         ) : null}

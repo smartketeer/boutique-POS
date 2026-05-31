@@ -18,46 +18,88 @@ const ActivityDetailsModal = ({ open, onClose, activity }) => {
             return <div className="text-sm text-[#a6a6a6]">No additional details available.</div>;
         }
 
+        const adjustmentReason = metadata.adjustment_reason;
+        const hasAdjustmentReason = adjustmentReason !== undefined && adjustmentReason !== null && String(adjustmentReason).trim() !== '';
+
+        // Extra top-level fields to display (excluding before/after/adjustment_reason)
+        const extraKeys = Object.keys(metadata).filter(k => k !== 'before' && k !== 'after' && k !== 'adjustment_reason');
+
         if (metadata.before && metadata.after) {
             const keys = Array.from(new Set([...Object.keys(metadata.before), ...Object.keys(metadata.after)]));
+            const changedKeys = keys.filter(k => JSON.stringify(metadata.before[k]) !== JSON.stringify(metadata.after[k]));
             return (
                 <div className="space-y-4">
-                    <div className="text-sm font-semibold text-[#818181]">Changes applied:</div>
-                    <div className="border border-[#19140015] rounded-xl overflow-hidden">
-                        <table className="w-full text-sm text-left">
-                            <thead className="bg-[#dddddd] text-[#a6a6a6] border-b border-[#19140015]">
-                                <tr>
-                                    <th className="px-4 py-2 font-semibold">Field</th>
-                                    <th className="px-4 py-2 font-semibold">Before</th>
-                                    <th className="px-4 py-2 font-semibold">After</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-[#19140010]">
-                                {keys.map(k => {
-                                    const b = metadata.before[k];
-                                    const a = metadata.after[k];
-                                    const changed = JSON.stringify(b) !== JSON.stringify(a);
-                                    if (!changed) return null; // Only show what changed
-                                    return (
-                                        <tr key={k} className="bg-amber-50/50 hover:bg-amber-100/50">
-                                            <td className="px-4 py-2 font-medium text-[#818181] capitalize">{k.replace(/_/g, ' ')}</td>
-                                            <td className="px-4 py-2 text-[#a6a6a6]">{b !== undefined && b !== null ? String(b) : '-'}</td>
-                                            <td className="px-4 py-2 text-[#818181] font-medium">{a !== undefined && a !== null ? String(a) : '-'}</td>
+                    {/* Adjustment Reason — always shown prominently when present */}
+                    {hasAdjustmentReason && (
+                        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+                            <div className="text-[11px] font-semibold text-amber-700 uppercase tracking-wider mb-1">Adjustment Reason</div>
+                            <div className="text-sm font-medium text-amber-900">{String(adjustmentReason)}</div>
+                        </div>
+                    )}
+
+                    {/* Extra context fields (branch_id, item_id, item_name, etc.) */}
+                    {extraKeys.length > 0 && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 bg-[#f8f9fa] p-3 rounded-xl border border-[#cbcbcb]">
+                            {extraKeys.map(k => (
+                                <div key={k} className="space-y-0.5">
+                                    <div className="text-[10px] font-semibold text-[#a6a6a6] uppercase tracking-wider">{k.replace(/_/g, ' ')}</div>
+                                    <div className="text-xs font-semibold text-[#3f3f46] break-all">
+                                        {typeof metadata[k] === 'object' ? JSON.stringify(metadata[k]) : String(metadata[k])}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {changedKeys.length === 0 ? (
+                        <div className="text-sm text-[#a6a6a6]">No field changes detected.</div>
+                    ) : (
+                        <div>
+                            <div className="text-sm font-semibold text-[#818181] mb-2">Changes applied:</div>
+                            <div className="border border-[#19140015] rounded-xl overflow-hidden">
+                                <table className="w-full text-sm text-left">
+                                    <thead className="bg-[#dddddd] text-[#a6a6a6] border-b border-[#19140015]">
+                                        <tr>
+                                            <th className="px-4 py-2 font-semibold">Field</th>
+                                            <th className="px-4 py-2 font-semibold">Before</th>
+                                            <th className="px-4 py-2 font-semibold">After</th>
                                         </tr>
-                                    )
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
+                                    </thead>
+                                    <tbody className="divide-y divide-[#19140010]">
+                                        {changedKeys.map(k => {
+                                            const b = metadata.before[k];
+                                            const a = metadata.after[k];
+                                            return (
+                                                <tr key={k} className="bg-amber-50/50 hover:bg-amber-100/50">
+                                                    <td className="px-4 py-2 font-medium text-[#818181] capitalize">{k.replace(/_/g, ' ')}</td>
+                                                    <td className="px-4 py-2 text-[#a6a6a6]">{b !== undefined && b !== null ? String(b) : '-'}</td>
+                                                    <td className="px-4 py-2 text-[#818181] font-medium">{a !== undefined && a !== null ? String(a) : '-'}</td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
                 </div>
             );
         }
 
         return (
             <div className="space-y-4">
+                {/* Adjustment Reason — always shown prominently when present */}
+                {hasAdjustmentReason && (
+                    <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
+                        <div className="text-[11px] font-semibold text-amber-700 uppercase tracking-wider mb-1">Adjustment Reason</div>
+                        <div className="text-sm font-medium text-amber-900">{String(adjustmentReason)}</div>
+                    </div>
+                )}
                 <div className="text-sm font-semibold text-[#818181]">Details:</div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-3 bg-[#f8f9fa] p-4 rounded-xl border border-[#cbcbcb]">
-                    {Object.entries(metadata).map(([k, v]) => (
+                    {Object.entries(metadata)
+                        .filter(([k]) => k !== 'adjustment_reason')
+                        .map(([k, v]) => (
                         <div key={k} className="space-y-1">
                             <div className="text-[11px] font-semibold text-[#a6a6a6] uppercase tracking-wider">{k.replace(/_/g, ' ')}</div>
                             <div className="text-sm font-semibold text-[#3f3f46] break-all">

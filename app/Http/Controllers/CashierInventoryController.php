@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ActivityLog;
 use App\Models\Branch;
 use App\Models\BranchItemStock;
+use App\Models\Category;
 use App\Models\Item;
 use App\Models\StockLog;
 use App\Services\BranchResolver;
@@ -121,6 +122,10 @@ class CashierInventoryController extends Controller
                         'sku' => $existing->sku,
                         'name' => $existing->name,
                         'category_id' => $existing->category_id,
+                        'category_name' => optional($existing->category)->name,
+                        'price' => (float) $existing->price,
+                        'cost' => (float) $existing->cost,
+                        'item_type' => $existing->is_service ? 'service' : 'product',
                         'added_qty' => $addedQty,
                         'new_branch_qty' => $newBranchQty,
                     ],
@@ -181,7 +186,11 @@ class CashierInventoryController extends Controller
                     'sku' => $item->sku,
                     'name' => $item->name,
                     'category_id' => $item->category_id,
-                    'stock_qty' => $normalizedStock,
+                    'category_name' => optional(Category::find($item->category_id))->name,
+                    'price' => (float) $item->price,
+                    'cost' => (float) $item->cost,
+                    'item_type' => $item->is_service ? 'service' : 'product',
+                    'initial_stock_qty' => $normalizedStock,
                 ],
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
@@ -213,8 +222,18 @@ class CashierInventoryController extends Controller
             'cost' => 'sometimes|required|numeric|min:0',
             'stock_qty' => 'sometimes|required|integer|min:0',
             'is_service' => 'sometimes|required|boolean',
-            'adjustment_reason' => 'nullable|string',
+            'adjustment_reason' => 'nullable|string|max:500',
         ]);
+
+        // Require an adjustment reason when stock quantity is explicitly changed
+        if (array_key_exists('stock_qty', $validated)) {
+            $adjustmentReason = trim((string) ($validated['adjustment_reason'] ?? ''));
+            if ($adjustmentReason === '') {
+                throw ValidationException::withMessages([
+                    'adjustment_reason' => 'An adjustment reason is required when modifying the stock quantity.',
+                ]);
+            }
+        }
 
         return DB::transaction(function () use ($request, $validated, $item) {
             $user = $request->user();
@@ -232,11 +251,12 @@ class CashierInventoryController extends Controller
 
             $before = [
                 'category_id' => $item->category_id,
+                'category_name' => optional($item->category)->name,
                 'name' => $item->name,
                 'sku' => $item->sku,
-                'price' => $item->price,
-                'cost' => $item->cost,
-                'is_service' => $item->is_service,
+                'price' => (float) $item->price,
+                'cost' => (float) $item->cost,
+                'item_type' => $item->is_service ? 'service' : 'product',
                 'branch_stock_qty' => (int) $stock->quantity,
             ];
 
@@ -273,13 +293,17 @@ class CashierInventoryController extends Controller
                 ->where('item_id', $item->id)
                 ->value('quantity');
 
+            // Reload category after potential update
+            $item->load('category');
+
             $after = [
                 'category_id' => $item->category_id,
+                'category_name' => optional($item->category)->name,
                 'name' => $item->name,
                 'sku' => $item->sku,
-                'price' => $item->price,
-                'cost' => $item->cost,
-                'is_service' => $item->is_service,
+                'price' => (float) $item->price,
+                'cost' => (float) $item->cost,
+                'item_type' => $item->is_service ? 'service' : 'product',
                 'branch_stock_qty' => (int) ($afterStock ?? 0),
             ];
 
@@ -290,9 +314,10 @@ class CashierInventoryController extends Controller
                 'metadata' => [
                     'branch_id' => $branchId,
                     'item_id' => $item->id,
+                    'item_name' => $item->name,
                     'before' => $before,
                     'after' => $after,
-                    'adjustment_reason' => $request->adjustment_reason ?? null,
+                    'adjustment_reason' => trim((string) ($request->adjustment_reason ?? '')),
                 ],
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),

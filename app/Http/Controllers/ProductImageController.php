@@ -131,6 +131,9 @@ class ProductImageController extends Controller
             }
         });
 
+        // Refresh the item from DB so that the updated primary_image_id is reflected
+        $item->refresh();
+
         return $this->index($item);
     }
 }
