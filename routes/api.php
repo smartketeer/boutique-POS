@@ -92,6 +92,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Cashier Accounts
         Route::get('/cashiers', [CashierAccountController::class, 'index']);
+        Route::post('/cashiers', [CashierAccountController::class, 'store']);
         Route::put('/cashiers/{user}', [CashierAccountController::class, 'update']);
         Route::delete('/cashiers/{user}', [CashierAccountController::class, 'destroy']);
 

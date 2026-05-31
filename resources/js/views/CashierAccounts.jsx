@@ -235,11 +235,6 @@ const CashierAccounts = () => {
         e.preventDefault();
         setError('');
         try {
-            if (!form.id) {
-                setError('Cashier creation is disabled. Please contact the developers to add a cashier.');
-                return;
-            }
-
             const branchIds = (form.branch_ids || []).map((id) => Number(id)).filter((n) => Number.isFinite(n));
             if (!branchIds.length) {
                 setError('Please select at least one branch.');
@@ -251,8 +246,20 @@ const CashierAccounts = () => {
                 email: form.email,
                 branch_ids: branchIds,
             };
-            if (form.password) payload.password = form.password;
-            await axios.put(`/api/cashiers/${form.id}`, payload);
+
+            if (form.id) {
+                // Update existing cashier
+                if (form.password) payload.password = form.password;
+                await axios.put(`/api/cashiers/${form.id}`, payload);
+            } else {
+                // Create new cashier
+                if (!form.password) {
+                    setError('Password is required when creating a new cashier.');
+                    return;
+                }
+                payload.password = form.password;
+                await axios.post('/api/cashiers', payload);
+            }
 
             resetForm();
             fetchCashiers();
@@ -320,16 +327,10 @@ const CashierAccounts = () => {
                 <div className="lg:col-span-2 bg-gradient-to-b from-white to-[#fff7f9] border border-[#19140015] rounded-3xl shadow-sm p-6">
                     <div className="flex items-center gap-2 mb-4">
                         <UserRound size={18} className="text-[#d94a79]" />
-                        <h2 className="text-sm font-semibold text-[#818181]">Edit Cashier</h2>
+                        <h2 className="text-sm font-semibold text-[#818181]">{form.id ? 'Edit Cashier' : 'Add Cashier'}</h2>
                     </div>
 
-                    {!form.id ? (
-                        <div className="text-sm text-[#a6a6a6]">
-                            Select a cashier from the list to edit. Creating a cashier is disabled; please contact the developers to add a cashier.
-                        </div>
-                    ) : null}
-
-                    <form onSubmit={handleSubmit} className={`space-y-4 ${!form.id ? 'opacity-60 pointer-events-none' : ''}`}>
+                    <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
                             <label className="block text-xs font-semibold text-[#a6a6a6] mb-1">Name</label>
                             <input
@@ -410,31 +411,34 @@ const CashierAccounts = () => {
 
                         <div>
                             <label className="block text-xs font-semibold text-[#a6a6a6] mb-1">
-                                Password (leave blank to keep current)
+                                Password {form.id ? '(leave blank to keep current)' : ''}
                             </label>
                             <input
                                 type="password"
                                 value={form.password}
                                 onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
                                 className="w-full px-3 py-2 border border-[#19140035] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#d94a79]/25 bg-white"
+                                required={!form.id}
                             />
                         </div>
 
                         <div className="flex gap-2">
                             <button
                                 type="submit"
-                                disabled={!form.id || branchesLoading || Boolean(branchesError) || branches.length === 0 || (form.branch_ids || []).length === 0}
-                                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-[#4a2437] to-[#d94a79] text-white rounded-xl font-semibold hover:opacity-95 transition-opacity shadow-sm"
+                                disabled={branchesLoading || Boolean(branchesError) || branches.length === 0 || (form.branch_ids || []).length === 0}
+                                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-[#4a2437] to-[#d94a79] text-white rounded-xl font-semibold hover:opacity-95 transition-opacity shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                Save Changes
+                                {form.id ? 'Save Changes' : 'Add Cashier'}
                             </button>
-                            <button
-                                type="button"
-                                onClick={resetForm}
-                                className="px-4 py-2 border border-[#19140035] rounded-xl font-semibold hover:bg-[#fff7f9]"
-                            >
-                                Cancel
-                            </button>
+                            {form.id ? (
+                                <button
+                                    type="button"
+                                    onClick={resetForm}
+                                    className="px-4 py-2 border border-[#19140035] rounded-xl font-semibold hover:bg-[#fff7f9]"
+                                >
+                                    Cancel
+                                </button>
+                            ) : null}
                         </div>
                     </form>
                 </div>
