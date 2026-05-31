@@ -119,7 +119,11 @@ class ProductImageController extends Controller
 
             $paths = array_values(array_filter([$image->path, $image->thumb_path]));
             if ($paths) {
-                Storage::disk('public')->delete($paths);
+                try {
+                    Storage::disk('public')->delete($paths);
+                } catch (\Exception $e) {
+                    // Ignore file deletion errors (e.g. if file is already missing)
+                }
             }
 
             $image->delete();
