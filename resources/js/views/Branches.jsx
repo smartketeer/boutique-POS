@@ -7,6 +7,7 @@ const Branches = () => {
     const [branches, setBranches] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
     const [error, setError] = React.useState('');
+    const [success, setSuccess] = React.useState('');
 
     const [form, setForm] = React.useState({
         id: null,
@@ -38,6 +39,7 @@ const Branches = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        setSuccess('');
         try {
             const payload = {
                 name: form.name,
@@ -50,6 +52,7 @@ const Branches = () => {
             } else {
                 await axios.post('/api/branches', payload);
             }
+            setSuccess(form.id ? 'Branch updated successfully.' : 'Branch created successfully.');
             resetForm();
             fetchBranches();
         } catch (err) {
@@ -80,8 +83,10 @@ const Branches = () => {
         if (!deleteTargetBranch) return;
         setDeleteConfirming(true);
         setError('');
+        setSuccess('');
         try {
             await axios.delete(`/api/branches/${deleteTargetBranch.id}`);
+            setSuccess('Branch deleted successfully.');
             setDeleteModalOpen(false);
             setDeleteTargetBranch(null);
             fetchBranches();
@@ -105,6 +110,9 @@ const Branches = () => {
 
             {error ? (
                 <div className="p-3 bg-[#dddddd] text-[#818181] border border-red-100 rounded-lg text-sm">{error}</div>
+            ) : null}
+            {success ? (
+                <div className="p-3 bg-[#dddddd] text-[#818181] border border-green-100 rounded-lg text-sm">{success}</div>
             ) : null}
 
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
